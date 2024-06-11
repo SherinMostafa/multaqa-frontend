@@ -1,0 +1,39 @@
+npx create-react-app [name] > Create New Project
+npm start > Run Project
+
+Colors
+Copper > #A8763E
+cosmic Latte > #F7F3E3
+Anti-flash White > #ECF0F1
+Barn Red > #6F1A07
+Bistre > #2B2118
+
+-------
+#f3f1f7
+#2a273f
+#8153e7
+#958daa
+#9d7c6c
+-------
+
+Libraries
+
+1- npm install react-router-dom@6 > For Navbar Links
+2- npm install --save react-spinners > For Loading Page
+3- npm install -D tailwindcss > For Tailwind CSS
+   npx tailwindcss init
+
+4- npm install react-icons --save > For Icons
+5- npm install swiper > For Sliders
+6- npm install axios > For Connecting Backend
+
+7- npm i mdb-react-ui-kit
+8- npm i @fortawesome/fontawesome-free
+import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import "@fortawesome/fontawesome-free/css/all.min.css";
+
+9- npm install --save-dev tailwind-scrollbar > For Scrollbar
+
+npm install express
+npm install body-parser
+npm install mongodb
