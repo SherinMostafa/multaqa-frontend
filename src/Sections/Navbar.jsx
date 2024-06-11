@@ -11,8 +11,9 @@ import axios from 'axios';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
-  const { isLoggedIn, user, logout } = useContext(AuthContext);
+  const { isLoggedIn, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user'));
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
@@ -23,6 +24,10 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+
+    if (!localStorage.getItem('user_type')) {
+      navigate('/welcome');
+    }
     const handleScroll = () => {
       const scrolled = window.scrollY > 0;
       setIsFixed(scrolled);
@@ -37,6 +42,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await axios.get('http://localhost:5000/users/logout');
+      localStorage.clear();
       logout();
       navigate('/Login');
     } catch (error) {
@@ -73,7 +79,7 @@ const Navbar = () => {
                 <div className='relative group'>
                   <div className='flex items-center gap-2 text-sm font-semibold text-[#2B2118] transition duration-500 cursor-pointer'>
                     <PiUserCircle className="h-6 w-6" />
-                    {user.email}
+                    {user.fname} {user.lname}
                   </div>
                   <div className="absolute right-0 top-6 z-50 w-48 bg-white rounded-md shadow-lg overflow-hidden transition-all duration-300 max-h-0 group-hover:max-h-96 group-hover:py-2">
                     <NavLink

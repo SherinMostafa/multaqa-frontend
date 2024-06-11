@@ -39,6 +39,8 @@ function Register() {
       });
 
       if (response.status === 200) {
+
+        localStorage.setItem("user", JSON.stringify(response.data.data));
         navigate('/Welcome'); // Include email in the state
       }
     } catch (error) {

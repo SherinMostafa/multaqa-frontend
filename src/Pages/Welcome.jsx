@@ -1,29 +1,41 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Button from '../Components/Button';
 
 const Welcome = () => {
+  const user_type = localStorage.getItem('user_type');
+  useEffect(()=>{
+    console.log(user_type);
+      if (user_type){
+        navigate("/" + user_type);
+      }
+  });
+
   const navigate = useNavigate();
   const location = useLocation();
-  const { email } = location.state || {}; // Get the email from state
+  // const { email } = location.state || {}; // Get the email from state
+  const id = JSON.parse(localStorage.getItem("user"))._id;
 
   const handleUserRole = async (role) => {
+    // console.log(role);
     try {
-      if (!email) {
+      if (!id) {
         console.error('Email not found');
         return;
       }
 
       const response = await axios.post('http://localhost:5000/role', {
-        email: email, // Pass the email
+        userId: id, // Pass the email
         role: role,
       });
 
       console.log('User role updated:', response.data);
       if (role === 'attendee') {
+        localStorage.setItem("user_type", 'Attendee');
         navigate('/Attendee');
       } else if (role === 'creator') {
+        localStorage.setItem("user_type", 'Organizer');
         navigate('/Organizer');
       }
     } catch (error) {
