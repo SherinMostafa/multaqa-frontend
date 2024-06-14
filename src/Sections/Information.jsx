@@ -4,8 +4,7 @@ import { FaUser } from 'react-icons/fa';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 import AuthContext from '../Context/AuthContext';
-import { storage } from '../firebase'; // Adjust the path as necessary
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { useDropzone } from 'react-dropzone';
 
 function Information() {
   const { user, updateUser } = useContext(AuthContext);
@@ -16,9 +15,9 @@ function Information() {
     address: '',
     city: '',
     profileImg: '',
+    imageFile: null,
   });
   const [errorMessage, setErrorMessage] = useState('');
-  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -33,25 +32,26 @@ function Information() {
     }
   }, [user]);
 
-  const handleImageUpload = async (event) => {
-    const file = event.target.files[0];
+  const handleImageChange = (acceptedFiles) => {
+    const file = acceptedFiles[0];
     if (file) {
-      setIsUploading(true);
-      const storageRef = ref(storage, `profile_images/${file.name}`);
-      await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(storageRef);
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        profileImg: downloadURL,
-      }));
-      setIsUploading(false);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          profileImg: reader.result,
+          imageFile: file,
+        }));
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleImageRemove = () => {
+  const handleRemoveImage = () => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       profileImg: '',
+      imageFile: null,
     }));
   };
 
@@ -66,11 +66,21 @@ function Information() {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.patch(`http://localhost:5000/users/${user.email}`, formData);
+      const formDataToSubmit = {
+        fname: formData.fname,
+        lname: formData.lname,
+        phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        profileImg: formData.profileImg,
+      };
+  
+      const response = await axios.patch(`http://localhost:5000/users/${user.email}`, formDataToSubmit);
+  
       if (response.status === 200) {
         alert('Information updated successfully');
         setErrorMessage('');
-        updateUser(response.data);  // Update the user in context
+        updateUser(response.data);
       } else {
         throw new Error(response.data || 'Failed to update information');
       }
@@ -81,6 +91,12 @@ function Information() {
       );
     }
   };
+  
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: 'image/*',
+    onDrop: handleImageChange,
+    multiple: false,
+  });
 
   return (
     <form className="flex-1 pl-2 pt-4 lg:p-10" onSubmit={handleSave}>
@@ -88,40 +104,32 @@ function Information() {
       <hr className='my-4 w-3/4' />
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Profile Image</h2>
-        <div className="flex flex-col space-y-4 py-8">
-          <div className={`p-6 text-center rounded-lg ${formData.profileImg ? '' : 'border-dashed border-2 border-gray-300 w-fit'}`}>
-            {formData.profileImg ? (
-              <img src={formData.profileImg} alt="Profile" className="w-36 h-36 rounded-full object-cover shadow-lg" />
-            ) : (
-              <FaUser className="w-36 h-36 mx-auto text-gray-400" />
-            )}
-          </div>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            id="file-upload"
-            className="hidden"
-            disabled={isUploading}
-          />
-          <div className="flex space-x-4">
+        <div
+          {...getRootProps()}
+          className="dropzone mb-10"
+          style={{
+            padding: formData.profileImg ? '' : '20px',
+            textAlign: 'center',
+            cursor: 'pointer',
+            border: formData.profileImg ? 'none' : 'dashed 2px grey',
+          }}
+        >
+          <input {...getInputProps()} />
+          {formData.profileImg ? (
+            <img src={formData.profileImg} alt="Uploaded" className="w-36 h-36 rounded-full" />
+          ) : (
+            <FaUser className="w-36 h-36 mx-auto text-gray-400" />
+          )}
+        </div>
+        <div className="flex space-x-4">
+          {formData.profileImg && (
             <Button 
               type="button" 
-              label={formData.profileImg ? "Change Image" : "Upload Profile Image"} 
-              customStyle="px-4 py-2 text-[18px]" 
-              onClick={() => document.getElementById('file-upload').click()}
-              disabled={isUploading}
+              label="Remove Image"
+              customStyle="px-4 py-2 text-[18px] bg-[#ECF0F1] border-[#ECF0F1] text-black hover:text-white" 
+              onClick={handleRemoveImage}
             />
-            {formData.profileImg && (
-              <Button 
-                type="button" 
-                label="Remove Image"
-                customStyle="px-4 py-2 text-[18px] bg-[#ECF0F1] border-[#ECF0F1] text-black hover:text-white" 
-                onClick={handleImageRemove}
-                disabled={isUploading}
-              />
-            )}
-          </div>
+          )}
         </div>
       </section>
 
@@ -179,7 +187,7 @@ function Information() {
 
       {errorMessage && <p className="text-red-500 text-center mb-8">{errorMessage}</p>}
 
-      <Button type="submit" form={true} label="Save" customStyle="px-8 py-4 text-[18px] font-bold w-3/4 flex justify-center" disabled={isUploading} />
+      <Button type="submit" form={true} label="Save" customStyle="px-8 py-4 text-[18px] font-bold w-3/4 flex justify-center" />
     </form>
   );
 }

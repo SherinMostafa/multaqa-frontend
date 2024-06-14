@@ -151,13 +151,6 @@ export const events = [
     { label: 'Spa', value: 'Spa', icon: <FaSpa /> },
     { label: 'Celebration', value: 'Celebration', icon: <MdCelebration /> },
   ];
-  
-  export const cities = [
-    { label: 'Select a city', value: '' },
-    { label: 'Cairo', value: 'Cairo', },
-    { label: 'Giza', value: 'Giza', },
-
-  ];
 
 export const users = [
   {firstname: "Bassant" , lastname:"Emad", email:"Bassantemad083@gmail.com", password:"12345" },

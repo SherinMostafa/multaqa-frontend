@@ -1,10 +1,26 @@
-import React from 'react'
-import Landing from '../Sections/Landing'
-import Cards from '../Sections/Cards'
-import Categories from '../Sections/Categories'
-import { events } from '../Constants'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Landing from '../Sections/Landing';
+import Cards from '../Sections/Cards';
+import Categories from '../Sections/Categories';
 
 function Home() {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/events'); // Adjust URL as per your backend endpoint
+      setEvents(response.data);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      // Handle error state if needed
+    }
+  };
+
   return (
     <>
       <div className='container mx-auto px-4 sm:px-6 lg:px-8 mt-6'>
@@ -22,7 +38,7 @@ function Home() {
         <Categories />
       </div>
     </>
-  )
+  );
 }
 
 export default Home;

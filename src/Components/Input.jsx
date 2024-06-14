@@ -1,63 +1,78 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const CustomDropdown = ({ options, value, onChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+const Input = ({
+  id,
+  label,
+  type,
+  value,
+  onChange,
+  withFloatingEffect,
+  placeholder,
+  textArea,
+  name,
+  customStyle,
+  selectOptions,
+  rows,
+  cols
+}) => {
+  const defaultStyle = "w-full px-4 py-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:ring-1 focus:ring-[#6F1A07]";
 
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  const CustomDropdown = ({ id, options, value, onChange }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+      const handleOutsideClick = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+          setIsOpen(false);
+        }
+      };
+
+      document.body.addEventListener('click', handleOutsideClick);
+
+      return () => {
+        document.body.removeEventListener('click', handleOutsideClick);
+      };
+    }, []);
+
+    const handleSelect = (option) => {
+      if (!option.disabled) {
+        onChange({ target: { id, value: option.value } });
         setIsOpen(false);
       }
     };
 
-    document.body.addEventListener('click', handleOutsideClick);
-
-    return () => {
-      document.body.removeEventListener('click', handleOutsideClick);
-    };
-  }, []);
-
-  const handleSelect = (option) => {
-    if (!option.disabled) {
-      onChange({ target: { id: 'city', value: option.value } });
-      setIsOpen(false);
-    }
-  };
-
-  return (
-    <div className="relative" ref={dropdownRef}>
-      <div
-        className="w-full p-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:border-[#6F1A07] cursor-pointer"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {value ? options.find(option => option.value === value)?.label : 'Select an option'}
-      </div>
-      {isOpen && (
-        <div className="absolute top-full left-0 w-full border border-gray-300 bg-white z-10 rounded-b-lg shadow-lg">
-          {options.map((option, index) => (
-            <div
-              key={index}
-              className={`p-2 cursor-pointer hover:bg-gray-100 ${option.disabled ? 'text-gray-400' : ''}`}
-              onClick={() => handleSelect(option)}
-            >
-              {option.label}
-            </div>
-          ))}
+    return (
+      <div className="relative" ref={dropdownRef}>
+        <div
+          className="w-full p-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:border-[#6F1A07] cursor-pointer"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {value ? options.find(option => option.value === value)?.label : 'Select an option'}
         </div>
-      )}
-    </div>
-  );
-};
-
-const Input = ({ id, label, type, value, onChange, withFloatingEffect, placeholder, textArea, name, customStyle, selectOptions, rows, cols }) => {
-  const defaultStyle = "w-full px-4 py-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:ring-1 focus:ring-[#6F1A07]";
+        {isOpen && (
+          <div className="absolute top-full left-0 w-full border border-gray-300 bg-white z-10 rounded-b-lg shadow-lg">
+            {options.map((option, index) => (
+              <div
+                key={index}
+                className={`p-2 cursor-pointer hover:bg-gray-100 ${option.disabled ? 'text-gray-400' : ''}`}
+                onClick={() => handleSelect(option)}
+              >
+                {option.label}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   if (selectOptions) {
     return (
       <div className="mb-4">
         <label htmlFor={id} className="block text-gray-700 font-semibold mb-2">{label}</label>
         <CustomDropdown
+          id={id}
           options={selectOptions}
           value={value}
           onChange={onChange}
