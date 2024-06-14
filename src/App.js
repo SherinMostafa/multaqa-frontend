@@ -8,6 +8,7 @@ import { events, navLinks } from './Constants/index';
 import Event from './Pages/Event';
 import { FaArrowUp } from "react-icons/fa";
 import { AuthProvider } from './Context/AuthContext';
+import Ticket from './Pages/Ticket';
 
 const App = () => {
   const [loading, setLoading] = useState(false);
@@ -65,7 +66,7 @@ const App = () => {
 const MainContent = () => {
   const location = useLocation();
   const hideNavbarRoutes = ['/Register', '/Login', '/Welcome', '/Interests'];
-  const hideFooterRoutes = ['/Welcome', '/Interests'];
+  const hideFooterRoutes = ['/Welcome', '/Interests', '/Create', '/Ticket'];
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -81,6 +82,8 @@ const MainContent = () => {
         {events.map(event => (
           <Route key={event.id} path={`/event/${event.id}`} element={<Event event={event} />} />
         ))}
+  <Route path="/tickets/:eventId" element={<Ticket />} />
+
       </Routes>
       {!hideFooterRoutes.includes(location.pathname) && <Footer />}
     </>

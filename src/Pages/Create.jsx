@@ -3,8 +3,11 @@ import axios from 'axios';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { useDropzone } from 'react-dropzone';
+import { useNavigate } from 'react-router-dom';
 
 const Create = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -21,7 +24,7 @@ const Create = () => {
 
   useEffect(() => {
     const fetchUserId = () => {
-      const userData = localStorage.getItem('user'); // Fetch user data from local storage
+      const userData = localStorage.getItem('user');
       if (userData) {
         const user = JSON.parse(userData);
         return user._id;
@@ -60,15 +63,24 @@ const Create = () => {
     Object.keys(formData).forEach((key) => {
       formDataToSubmit.append(key, formData[key]);
     });
-
+  
     try {
       const response = await axios.post('http://localhost:5000/event', formDataToSubmit, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+  
+      console.log('Response:', response.data); // Check the response data in console
+  
       if (response.status === 200) {
+        const { event } = response.data;
+        if (!event || !event._id) {
+          throw new Error('Event ID not found in response');
+        }
+  
         alert('Event created successfully');
+  
         // Reset form data after successful creation
         setFormData({
           title: '',
@@ -81,15 +93,21 @@ const Create = () => {
           category_id: '',
           user_id: formData.user_id,
         });
+  
+        localStorage.setItem('eventId', response.data.event._id);
+
+        // Navigate to tickets page with event ID
+        navigate(`/tickets/${response.data.event._id}`);
+        
       } else {
-        throw new Error(response.data || 'Failed to create event');
+        throw new Error(response.data.error || 'Failed to create event');
       }
     } catch (error) {
       console.error('Error creating event:', error.response?.data || error.message);
       alert('Failed to create event. Please check console for details.');
     }
   };
-
+  
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevFormData) => ({
@@ -113,8 +131,26 @@ const Create = () => {
     multiple: false,
   });
 
+  const goBack = () => {
+    window.history.back();
+  };
+
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto px-4 mt-4 mb-20">
+      <Button
+  type="button"
+  label="Location"
+  onClick={() => handleLocationTypeChange('location')}
+  customStyle={locationType === 'location' ? 'activeStyle' : 'inactiveStyle'}
+/>
+      <Button
+        type="button"
+        label="Go Back"
+        onClick={goBack}
+        link={true}
+        customStyle={'p-4'}
+      />
+
       <div className="bg-white bg-opacity-80 backdrop-blur-md shadow-xl rounded-md mx-auto my-5 p-12 mt-10 md:max-w-4xl">
         <h2 className="text-4xl font-bold mb-14 text-[#6F1A07] text-center">Create Event</h2>
 
@@ -184,46 +220,14 @@ const Create = () => {
               />
             </div>
 
-            <div className="mb-4 mt-10">
-              <div className="flex gap-6 mb-6">
-                <Button
-                  type="button"
-                  label="Location"
-                  onClick={() => handleLocationTypeChange('location')}
-                  customStyle={locationType === 'location' ? 'px-4 py-2 bg-[#A8763E] border-[#A8763E] rounded-full' : 'px-4 py-2 rounded-full'}
-                />
-                <Button
-                  type="button"
-                  label="Online"
-                  onClick={() => handleLocationTypeChange('onlineUrl')}
-                  customStyle={locationType === 'onlineUrl' ? 'px-4 py-2 bg-[#A8763E] border-[#A8763E] rounded-full' : 'px-4 py-2 rounded-full'}
-                />
-              </div>
-            </div>
-
-            {locationType === 'location' && (
-              <Input
-                id="location"
-                type="text"
-                label="Location"
-                name="location"
-                customStyle={'mb-10'}
-                value={formData.location}
-                onChange={handleInputChange}
-              />
-            )}
-
-            {locationType === 'onlineUrl' && (
-              <Input
-                id="onlineUrl"
-                type="text"
-                label="Online URL"
-                name="onlineUrl"
-                customStyle={'mb-10'}
-                value={formData.onlineUrl}
-                onChange={handleInputChange}
-              />
-            )}
+            <Input
+              id="location"
+              type="text"
+              label="Location"
+              name="location"
+              value={formData.location}
+              onChange={handleInputChange}
+            />
 
             <Input
               id="category_id"

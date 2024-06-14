@@ -64,7 +64,7 @@ const Email = () => {
   return (
     <div className="flex-1 pl-2 pt-4 lg:p-10 min-h-96">
       <h1 className="text-2xl font-bold mb-6 text-[#6F1A07]">Change Email</h1>
-      <hr className='my-4 w-3/4' />
+      <hr className='my-4 w-full' />
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Account Email Address</h2>
         {isLoggedIn && <p className="font-semibold my-8 ml-2">{user.email}</p>}

@@ -8,7 +8,7 @@ const Welcome = () => {
   useEffect(()=>{
     console.log(user_type);
       if (user_type){
-        navigate("/" + user_type);
+        navigate("/");
       }
   });
 
@@ -33,10 +33,10 @@ const Welcome = () => {
       console.log('User role updated:', response.data);
       if (role === 'attendee') {
         localStorage.setItem("user_type", 'Attendee');
-        navigate('/Attendee');
+        navigate('/Home');
       } else if (role === 'creator') {
         localStorage.setItem("user_type", 'Organizer');
-        navigate('/Organizer');
+        navigate('/Home');
       }
     } catch (error) {
       console.error('Error updating user role:', error);

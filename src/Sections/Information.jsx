@@ -101,7 +101,7 @@ function Information() {
   return (
     <form className="flex-1 pl-2 pt-4 lg:p-10" onSubmit={handleSave}>
       <h1 className="text-2xl font-bold mb-6 text-[#6F1A07]">Account Information</h1>
-      <hr className='my-4 w-3/4' />
+      <hr className='my-4 w-full' />
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Profile Image</h2>
         <div
@@ -142,6 +142,7 @@ function Information() {
             type="text"
             value={formData.fname}
             onChange={handleInputChange}
+            required={true}
           />
           <Input
             id="lname"
@@ -149,6 +150,7 @@ function Information() {
             type="text"
             value={formData.lname}
             onChange={handleInputChange}
+            required={true}
           />
           <Input
             id="phone"
@@ -156,6 +158,7 @@ function Information() {
             type="tel"
             value={formData.phone}
             onChange={handleInputChange}
+            required={false}
           />
         </div>
       </section>
@@ -169,6 +172,7 @@ function Information() {
             type="text"
             value={formData.address}
             onChange={handleInputChange}
+            required={false}
           />
           <Input
             id="city"

@@ -12,12 +12,14 @@ import Interests from "../Pages/Interests";
 
 import { FaMusic, FaPaintRoller, FaSpa } from "react-icons/fa";
 import { MdCelebration } from "react-icons/md";
-import Attendee from "../Pages/Attendee";
 import Settings from "../Pages/Settings";
 import Information from "../Sections/Information";
 import Email from "../Sections/Email";
 import Password from "../Sections/Password";
 import Delete from "../Sections/Delete";
+import Account from "../Pages/Account";
+import Ticket from "../Pages/Ticket";
+import Tickets from "../Sections/Tickets";
 
 export const navLinks = [
   { href: "/", label: "Home", page: <Home /> },
@@ -31,15 +33,24 @@ export const navLinks = [
   { href: "/About", label: "About us", page: <About /> },
   { href: "/Welcome", label: "Welcome", page: <Welcome /> },
   { href: "/Interests", label: "Interests", page: <Interests /> },
-  { href: "/Attendee", label: "Attendee", page: <Attendee /> },
-  { href: "/Settings", label: "Settings", page: <Settings /> },
-  { href: "/Information", label: "Settings/Information", page: <Information /> },
+  { href: "/Account", label: "Account", page: <Account /> },
+  { href: "/Information", label: "/Information", page: <Information /> },
   { href: "/Email", label: "Email", page: <Email /> },
   { href: "/Password", label: "Password", page: <Password /> },
   { href: "/Delete", label: "Close Account", page: <Delete /> },
+  { href: "/Settings", label: "Settings", page: <Settings /> },
+  { href: "/Tickets", label: "Tickets", page: <Tickets /> },
 ];
 
-export const items = [
+// export const eventSettings = [
+//   { id: 1, href: '/Create', label: 'Create an event', content: <Create /> },
+//   // { id: 2, href: '/Email', label: 'Change Email', content: <Email /> },
+//   // { id: 3, href: '/Password', label: 'Change Password', content: <Password /> },
+//   // { id: 4, href: '/Delete', label: 'Close Account', content: <Delete /> },
+//   // { id: 4, label: 'Credit/Debit Cards', content: <CreditCards />, href: '/credit-cards' },
+// ];
+
+export const accountSettings = [
   { id: 1, href: '/Information', label: 'Account Information', content: <Information /> },
   { id: 2, href: '/Email', label: 'Change Email', content: <Email /> },
   { id: 3, href: '/Password', label: 'Change Password', content: <Password /> },
@@ -151,9 +162,3 @@ export const events = [
     { label: 'Spa', value: 'Spa', icon: <FaSpa /> },
     { label: 'Celebration', value: 'Celebration', icon: <MdCelebration /> },
   ];
-
-export const users = [
-  {firstname: "Bassant" , lastname:"Emad", email:"Bassantemad083@gmail.com", password:"12345" },
-  {firstname: "basmala" , lastname:"Emad", email:"basmalaemad111@gmail.com", password:"123456" },
-  {firstname: "bilal" , lastname:"Emad", email:"bilalemad222@gmail.com", password:"1234567" },
-];

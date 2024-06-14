@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { navLinks } from '../Constants/index';
 import Search from '../Components/Search';
 import Button from '../Components/Button';
@@ -13,7 +13,9 @@ const Navbar = () => {
   const [isFixed, setIsFixed] = useState(false);
   const { isLoggedIn, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
   const user = JSON.parse(localStorage.getItem('user'));
+  const userType = localStorage.getItem('user_type');
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
@@ -24,8 +26,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-
-    if (!localStorage.getItem('user_type')) {
+    if (!userType) {
       navigate('/welcome');
     }
     const handleScroll = () => {
@@ -37,7 +38,7 @@ const Navbar = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [navigate, userType]);
 
   const handleLogout = async () => {
     try {
@@ -50,6 +51,16 @@ const Navbar = () => {
     }
   };
 
+  const getVisibleNavLinks = () => {
+    const filteredNavLinks = navLinks.slice(1, 5);
+    if (userType === 'Attendee' || userType === 'attendee') {
+      return filteredNavLinks.filter((_, index) => index !== 1);
+    }
+    return filteredNavLinks.filter((_, index) => index !== 0);
+  };
+
+  const isCreatePage = location.pathname === '/Create' || location.pathname === '/Ticket';
+
   return (
     <>
       <nav className={`${isFixed ? 'sticky top-0 left-0 right-0 z-50 shadow-md' : ''} bg-white transition-all duration-500`}>
@@ -58,22 +69,26 @@ const Navbar = () => {
             <div className="flex-shrink-0 text-[#6F1A07] text-lg sm:text-2xl font-bold mr-4">
               <Link to={'/'} onClick={closeNavbar}>multaqa</Link>
             </div>
-            <div className='w-40 sm:w-auto'>
-              <Search placeholder={'Search events ...'} />
-            </div>
-            <div className="hidden lg:flex items-center justify-center">
-              {navLinks.slice(1, 4).map((navLink) => (
-                <NavLink
-                  key={navLink.label}
-                  to={navLink.href}
-                  className='text-[#2B2118] hover:text-[#A8763E] transition duration-500 px-4 py-2 rounded-md text-sm font-semibold flex-none'
-                  activeClassName="text-[#A8763E]"
-                  onClick={closeNavbar}
-                >
-                  {navLink.label}
-                </NavLink>
-              ))}
-            </div>
+            {!isCreatePage && (
+              <div className='w-40 sm:w-auto'>
+                <Search placeholder={'Search events ...'} />
+              </div>
+            )}
+            {!isCreatePage && (
+              <div className="hidden lg:flex items-center justify-center">
+                {getVisibleNavLinks().map((navLink) => (
+                  <NavLink
+                    key={navLink.label}
+                    to={navLink.href}
+                    className='text-[#2B2118] hover:text-[#A8763E] transition duration-500 px-4 py-2 rounded-md text-sm font-semibold flex-none'
+                    activeClassName="text-[#A8763E]"
+                    onClick={closeNavbar}
+                  >
+                    {navLink.label}
+                  </NavLink>
+                ))}
+              </div>
+            )}
             <div className="ml-2 flex items-center">
               {isLoggedIn ? (
                 <div className='relative group'>
@@ -84,7 +99,7 @@ const Navbar = () => {
                   <div className="absolute right-0 top-6 z-50 w-48 bg-white rounded-md shadow-lg overflow-hidden transition-all duration-300 max-h-0 group-hover:max-h-96 group-hover:py-2">
                     <NavLink
                       to={{
-                        pathname: '/Settings',
+                        pathname: '/Account',
                         state: { openUserInfo: true }
                       }}
                       className="block pl-6 py-2 text-sm text-[#2B2118] hover:text-[#A8763E] transition duration-500 border-b-2"
@@ -101,12 +116,14 @@ const Navbar = () => {
                   <Button label={'Sign in'} linkURL={'/Login'} customStyle={'py-2 px-4 text-sm'} onClick={closeNavbar} />
                 </div>
               )}
-              <div className="-mr-2 flex lg:hidden">
-                <button onClick={toggleNavbar} className="text-[#6F1A07] hover:text-[#A8763E] transition duration-500 inline-flex items-center justify-center p-2 rounded-md focus:outline-none">
-                  <span className="sr-only">Open main menu</span>
-                  {isOpen ? <CgClose className="h-6 w-6 md:h-8 md:w-8 md:ml-4" /> : <CgMenuRightAlt className="h-6 w-6 md:h-8 md:w-8 md:ml-4" />}
-                </button>
-              </div>
+              {!isCreatePage && (
+                <div className="-mr-2 flex lg:hidden">
+                  <button onClick={toggleNavbar} className="text-[#6F1A07] hover:text-[#A8763E] transition duration-500 inline-flex items-center justify-center p-2 rounded-md focus:outline-none">
+                    <span className="sr-only">Open main menu</span>
+                    {isOpen ? <CgClose className="h-6 w-6 md:h-8 md:w-8 md:ml-4" /> : <CgMenuRightAlt className="h-6 w-6 md:h-8 md:w-8 md:ml-4" />}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -120,7 +137,7 @@ const Navbar = () => {
             </button>
           </div>
           <div className="pb-6">
-            {navLinks.slice(1, 4).map((navLink) => (
+            {getVisibleNavLinks().map((navLink) => (
               <NavLink
                 key={navLink.label}
                 to={navLink.href}

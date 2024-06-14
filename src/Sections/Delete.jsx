@@ -68,7 +68,7 @@ const Delete = () => {
   return (
     <form onSubmit={handleDeleteAccount} className="flex-1 pl-2 pt-4 lg:p-10">
       <h1 className="text-2xl font-bold mb-6 text-[#6F1A07]">Close Account</h1>
-      <hr className='my-4 w-3/4' />
+      <hr className='my-4 w-full' />
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Verify account deletion</h2>

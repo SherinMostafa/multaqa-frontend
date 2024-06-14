@@ -13,7 +13,9 @@ const Input = ({
   customStyle,
   selectOptions,
   rows,
-  cols
+  cols,
+  required,
+  noLabel
 }) => {
   const defaultStyle = "w-full px-4 py-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:ring-1 focus:ring-[#6F1A07]";
 
@@ -92,7 +94,7 @@ const Input = ({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
-          required
+          required={required}
         />
       </div>
     );
@@ -107,7 +109,7 @@ const Input = ({
           placeholder=" "
           value={value}
           onChange={onChange}
-          required
+          required={required}
         />
         <label
           htmlFor={id}
@@ -115,6 +117,21 @@ const Input = ({
         >
           {label}
         </label>
+      </div>
+    );
+  } else if (noLabel) {
+    return (
+      <div className="mb-4">
+        <input
+          className={defaultStyle + ` ${customStyle}`}
+          id={id}
+          type={type}
+          name={name}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          required={required}
+        />
       </div>
     );
   } else {
@@ -129,7 +146,7 @@ const Input = ({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
-          required
+          required={required}
         />
       </div>
     );
