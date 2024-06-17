@@ -35,6 +35,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 9- npm install --save-dev tailwind-scrollbar > For Scrollbar
 10-npm install --save react-dropzone
 11-npm install react-tooltip
+12-npm install moment
 
 npm install express
 npm install body-parser

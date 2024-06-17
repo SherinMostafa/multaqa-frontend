@@ -26,12 +26,12 @@ const Cards = ({ events, withSlider, horizontal }) => {
     };
 
     const renderEventImage = (imageData) => {
-      if (typeof imageData === 'string' && imageData.startsWith('/9j/')) {
-          return <img src={`data:image/jpeg;base64,${imageData}`} alt="Event" className='mt-6 rounded-lg' />;
-      } else {
-          return <div className='mt-6 rounded-lg bg-gray-200 text-center py-14'>Image not available</div>;
-      }
-    };  
+        if (typeof imageData === 'string' && imageData.startsWith('/9j/')) {
+            return <img src={`data:image/jpeg;base64,${imageData}`} alt="Event" className='mt-6 rounded-lg' />;
+        } else {
+            return <div className='mt-6 rounded-lg bg-gray-200 text-center py-14'>Image not available</div>;
+        }
+    };
 
     const handleReportClose = () => {
         setEventWithOpenReport(null);
@@ -63,7 +63,7 @@ const Cards = ({ events, withSlider, horizontal }) => {
                                     <div className="bg-white shadow-md rounded-lg py-6 px-4 hover:shadow-lg duration-300">
                                         <Link to={`/event/${event._id}`}>
                                             <h2 className="text-lg font-semibold mb-2">{event.title}</h2>
-                                            <p className="text-[#2B2118]">{event.description}</p>
+                                            <p className="truncate text-[#2B2118]">{event.description}</p>
                                             <p className='text-[#2B2118] text-sm mt-4'>{new Date(event.date).toLocaleDateString()}</p>
                                             <p className='text-[#2B2118] text-sm'>{event.price}</p>
                                             {renderEventImage(event.image)}
@@ -73,6 +73,7 @@ const Cards = ({ events, withSlider, horizontal }) => {
                                             isSaved={event.isSaved}
                                             onSaveChange={(newSavedValue) => handleSaveChange(event._id, newSavedValue)}
                                             onReport={() => setEventWithOpenReport(event)}
+                                            eventId={event._id}
                                         />
                                     </div>
                                 </div>
@@ -85,8 +86,12 @@ const Cards = ({ events, withSlider, horizontal }) => {
                         <div className="bg-white p-8 rounded-md w-full max-w-lg mx-auto">
                             <h2 className="text-2xl font-bold mb-4">Report Event</h2>
                             <Report
-                                onSubmit={() => {}}
+                                onSubmit={() => {
+                                    alert('Report submitted successfully');
+                                    setEventWithOpenReport(null);
+                                }}
                                 onClose={handleReportClose}
+                                eventId={eventWithOpenReport._id}
                             />
                         </div>
                     </div>
@@ -103,7 +108,7 @@ const Cards = ({ events, withSlider, horizontal }) => {
                         </div>
                         <div className='ml-14 w-2/3'>
                             <h2 className="text-lg font-semibold mb-2">{eventsState.title}</h2>
-                            <p className="text-[#2B2118]">{eventsState.description}</p>
+                            <p className="truncate text-[#2B2118]">{eventsState.description}</p>
                             <p className='text-[#2B2118] text-sm mt-4'>{new Date(eventsState.date).toLocaleDateString()}</p>
                             <p className='text-[#2B2118] text-sm'>{eventsState.price}</p>
                             <Feedback
@@ -111,14 +116,19 @@ const Cards = ({ events, withSlider, horizontal }) => {
                                 isSaved={eventsState.isSaved}
                                 onSaveChange={(newSavedValue) => handleSaveChange(eventsState._id, newSavedValue)}
                                 onReport={() => setEventWithOpenReport(eventsState)}
+                                eventId={eventsState._id}
                             />
                         </div>
                     </div>
                 </Link>
                 {eventWithOpenReport && (
                     <Report
-                        onSubmit={() => {}}
+                        onSubmit={() => {
+                            alert('Report submitted successfully');
+                            setEventWithOpenReport(null);
+                        }}
                         onClose={handleReportClose}
+                        eventId={eventWithOpenReport._id}
                     />
                 )}
             </>
@@ -129,7 +139,7 @@ const Cards = ({ events, withSlider, horizontal }) => {
                 <div className="bg-white shadow-md rounded-lg py-6 px-4 hover:shadow-lg duration-300">
                     <Link to={`/event/${eventsState._id}`}>
                         <h2 className="text-lg font-semibold mb-2">{eventsState.title}</h2>
-                        <p className="text-[#2B2118]">{eventsState.description}</p>
+                        <p className="truncate text-[#2B2118]">{eventsState.description}</p>
                         <p className='text-[#2B2118] text-sm mt-4'>{new Date(eventsState.date).toLocaleDateString()}</p>
                         <p className='text-[#2B2118] text-sm'>{eventsState.price}</p>
                         {renderEventImage(eventsState.image)}
@@ -139,17 +149,22 @@ const Cards = ({ events, withSlider, horizontal }) => {
                         isSaved={eventsState.isSaved}
                         onSaveChange={(newSavedValue) => handleSaveChange(eventsState._id, newSavedValue)}
                         onReport={() => setEventWithOpenReport(eventsState)}
+                        eventId={eventsState._id}
                     />
                 </div>
                 {eventWithOpenReport && (
                     <Report
-                        onSubmit={() => {}}
+                        onSubmit={() => {
+                            alert('Report submitted successfully');
+                            setEventWithOpenReport(null);
+                        }}
                         onClose={handleReportClose}
+                        eventId={eventWithOpenReport._id}
                     />
                 )}
             </>
         );
     }
-}
+};
 
 export default Cards;
