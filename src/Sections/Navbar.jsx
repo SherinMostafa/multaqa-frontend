@@ -59,7 +59,7 @@ const Navbar = () => {
     return filteredNavLinks.filter((_, index) => index !== 0);
   };
 
-  const isCreatePage = location.pathname === '/Create' || location.pathname === '/Ticket';
+  const isCreatePage = location.pathname === '/Create' || location.pathname === '/Ticket' || location.pathname === '/Checkout';
 
   return (
     <>

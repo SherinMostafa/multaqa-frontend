@@ -105,7 +105,7 @@ const Create = () => {
   });
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto px-4 mt-4 mb-20">
       <div className="bg-white bg-opacity-80 backdrop-blur-md shadow-xl rounded-md mx-auto my-5 p-12 mt-10 md:max-w-4xl">
         <h2 className="text-4xl font-bold mb-14 text-[#6F1A07] text-center">Create Event</h2>
 
@@ -215,8 +215,12 @@ const Create = () => {
               onChange={handleInputChange}
               selectOptions={[
                 { value: '', label: 'Select an option', disabled: true },
-                { value: '60d21b4667d0d8992e610c85', label: 'Category 1' },
-                { value: '60d21b4667d0d8992e610c86', label: 'Category 2' },
+                { value: '666ccf55a86bb73a8fe40915', label: 'Science' },
+                { value: '666ccfd3a86bb73a8fe40917', label: 'Art' },
+                { value: '666cd023a86bb73a8fe40919', label: 'Health' },
+                { value: '666cd069a86bb73a8fe4091b', label: 'Charity' },
+                { value: '666cd0b4a86bb73a8fe4091d', label: 'Bazars' },
+                { value: '666cd14aa86bb73a8fe4091f', label: 'Entertainment' },
               ]}
             />
             

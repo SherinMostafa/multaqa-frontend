@@ -106,7 +106,7 @@ const Ticket = ({ eventId }) => {
             <input
               id="price"
               type="number"
-              className={`appearance-none rounded-md block w-full py-3 px-4 leading-tight focus:outline-none ${ticketData.priceType === 'Free' ? 'bg-gray-300 text-gray-600' : ''}`}
+              className={`w-full px-4 py-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:ring-1 focus:ring-[#6F1A07] ${ticketData.priceType === 'Free' ? 'bg-gray-300 text-gray-600' : ''}`}
               value={ticketData.priceType === 'Free' ? 0 : ticketData.price}
               onChange={handleInputChange}
               disabled={ticketData.priceType === 'Free'}
@@ -116,7 +116,7 @@ const Ticket = ({ eventId }) => {
             )}
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <Input
               id="startDate"
               type="date"

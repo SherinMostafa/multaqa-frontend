@@ -66,7 +66,7 @@ const App = () => {
 const MainContent = () => {
   const location = useLocation();
   const hideNavbarRoutes = ['/Register', '/Login', '/Welcome', '/Interests'];
-  const hideFooterRoutes = ['/Welcome', '/Interests', '/Create', '/Ticket'];
+  const hideFooterRoutes = ['/Welcome', '/Interests', '/Create', '/Ticket', '/Checkout'];
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -82,8 +82,7 @@ const MainContent = () => {
         {events.map(event => (
           <Route key={event.id} path={`/event/${event.id}`} element={<Event event={event} />} />
         ))}
-  <Route path="/tickets/:eventId" element={<Ticket />} />
-
+        <Route path="/tickets/:eventId" element={<Ticket />} />
       </Routes>
       {!hideFooterRoutes.includes(location.pathname) && <Footer />}
     </>

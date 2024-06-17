@@ -19,7 +19,7 @@ const Input = ({
 }) => {
   const defaultStyle = "w-full px-4 py-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:ring-1 focus:ring-[#6F1A07]";
 
-  const CustomDropdown = ({ id, options, value, onChange }) => {
+  const CustomDropdown = ({ id, options, value, onChange, customDropdownStyle }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -44,20 +44,22 @@ const Input = ({
       }
     };
 
+    const defaultLabel = options.length > 0 ? options[0].label : 'All Categories'; // Default label based on the first option
+
     return (
       <div className="relative" ref={dropdownRef}>
         <div
-          className="w-full p-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:border-[#6F1A07] cursor-pointer"
+          className={`w-full px-4 py-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:border-[#6F1A07] cursor-pointer ${customDropdownStyle}`}
           onClick={() => setIsOpen(!isOpen)}
         >
-          {value ? options.find(option => option.value === value)?.label : 'Select an option'}
+          {value ? options.find(opt => opt.value === value)?.label : defaultLabel}
         </div>
         {isOpen && (
           <div className="absolute top-full left-0 w-full border border-gray-300 bg-white z-10 rounded-b-lg shadow-lg">
             {options.map((option, index) => (
               <div
                 key={index}
-                className={`p-2 cursor-pointer hover:bg-gray-100 ${option.disabled ? 'text-gray-400' : ''}`}
+                className={`px-4 py-2 cursor-pointer hover:bg-gray-100 ${option.disabled ? 'text-gray-400' : ''} ${customDropdownStyle}`}
                 onClick={() => handleSelect(option)}
               >
                 {option.label}
@@ -72,12 +74,13 @@ const Input = ({
   if (selectOptions) {
     return (
       <div className="mb-4">
-        <label htmlFor={id} className="block text-gray-700 font-semibold mb-2">{label}</label>
+        <label htmlFor={id} className={`block text-gray-700 font-semibold mb-2 ${customStyle}`}>{label}</label>
         <CustomDropdown
           id={id}
           options={selectOptions}
           value={value}
           onChange={onChange}
+          customDropdownStyle={customStyle} // Pass customStyle as customDropdownStyle
         />
       </div>
     );

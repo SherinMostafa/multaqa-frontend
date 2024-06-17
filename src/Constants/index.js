@@ -19,7 +19,7 @@ import Password from "../Sections/Password";
 import Delete from "../Sections/Delete";
 import Account from "../Pages/Account";
 import Ticket from "../Pages/Ticket";
-import Tickets from "../Sections/Tickets";
+import Checkout from "../Pages/Checkout";
 
 export const navLinks = [
   { href: "/", label: "Home", page: <Home /> },
@@ -39,7 +39,8 @@ export const navLinks = [
   { href: "/Password", label: "Password", page: <Password /> },
   { href: "/Delete", label: "Close Account", page: <Delete /> },
   { href: "/Settings", label: "Settings", page: <Settings /> },
-  { href: "/Tickets", label: "Tickets", page: <Tickets /> },
+  { href: "/Ticket", label: "Ticket", page: <Ticket /> },
+  { href: "/Checkout", label: "Checkout", page: <Checkout /> },
 ];
 
 // export const eventSettings = [
