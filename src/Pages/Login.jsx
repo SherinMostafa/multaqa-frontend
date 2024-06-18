@@ -39,6 +39,11 @@ function Login() {
       if (response.status === 200) {
         console.log(response);
         localStorage.setItem("user", JSON.stringify(response.data.data));
+
+        if (response.data.data.type) {
+          localStorage.setItem("userType", response.data.data.type); // Save userType
+        }
+
         login(email); // Call login function with email
         navigate('/'); // Redirect to the home page
       } else {

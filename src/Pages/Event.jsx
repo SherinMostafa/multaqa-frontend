@@ -50,6 +50,20 @@ const Event = () => {
     return <div className="mt-10 container mx-auto text-center">Loading...</div>;
   }
 
+  if (error) {
+    return (
+      <div className="container mx-auto text-center flex flex-col gap-y-[55px] mt-16 mb-20">
+        <h2 className="text-3xl md:text-4xl font-bold mt-8 md:mt-12 mb-4 md:mb-6 text-[#6F1A07]">{error}</h2>
+        <Button
+          type={'button'}
+          onClick={goBack}
+          customStyle={'px-6 py-4 text-lg'}
+          label={'Go Back'}
+        />
+      </div>
+    );
+  }
+
   if (!event) {
     return (
       <div className="container mx-auto text-center flex flex-col gap-y-[55px] mt-16 mb-20">

@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from '../Components/Button';
 
 const Welcome = () => {
@@ -13,7 +13,6 @@ const Welcome = () => {
   });
 
   const navigate = useNavigate();
-  const location = useLocation();
   // const { email } = location.state || {}; // Get the email from state
   const id = JSON.parse(localStorage.getItem("user"))._id;
 

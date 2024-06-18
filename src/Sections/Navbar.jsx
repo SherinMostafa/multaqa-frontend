@@ -15,7 +15,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem('user'));
-  const userType = localStorage.getItem('user_type');
+  const userType = localStorage.getItem('userType'); // Corrected localStorage key
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
@@ -26,7 +26,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    if (!userType) {
+    if (isLoggedIn && !userType) {
       navigate('/Welcome');
     }
     const handleScroll = () => {
@@ -38,7 +38,7 @@ const Navbar = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [navigate, userType]);
+  }, [navigate, userType, isLoggedIn]);
 
   const handleLogout = async () => {
     try {

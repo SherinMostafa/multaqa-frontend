@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(false);
       setUser({});
       localStorage.removeItem('user');
+      localStorage.removeItem('userType'); // Clear userType on logout
     } catch (error) {
       console.error('Error logging out:', error);
     }
