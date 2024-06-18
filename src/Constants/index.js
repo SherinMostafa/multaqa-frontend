@@ -9,9 +9,6 @@ import Contact from "../Pages/Contact";
 import About from "../Pages/About";
 import Welcome from "../Pages/Welcome";
 import Interests from "../Pages/Interests";
-
-import { FaMusic, FaPaintRoller, FaSpa } from "react-icons/fa";
-import { MdCelebration } from "react-icons/md";
 import Settings from "../Pages/Settings";
 import Information from "../Sections/Information";
 import Email from "../Sections/Email";
@@ -20,11 +17,13 @@ import Delete from "../Sections/Delete";
 import Account from "../Pages/Account";
 import Ticket from "../Pages/Ticket";
 import Checkout from "../Pages/Checkout";
+import Likes from "../Pages/Likes";
 
 export const navLinks = [
   { href: "/", label: "Home", page: <Home /> },
   { href: "/Events", label: "Browse events", page: <Events /> },
   { href: "/Create", label: "Create an event", page: <Create /> },
+  { href: "/Likes", label: "Likes", page: <Likes /> },
   { href: "/Help", label: "Help center", page: <Help /> },
   { href: "/Contact", label: "Contact us", page: <Contact /> },
   { href: "/Register", label: "Register", page: <Register /> },
@@ -63,103 +62,3 @@ export const landingImages = [
   '/Images/alexandre-pellaes-6vAjp0pscX0-unsplash.jpg',
   '/Images/charlesdeluvio-wn7dOzUh3Rs-unsplash.jpg',
 ];
-
-export const events = [
-  {
-    id: 1,
-    title: 'Event 1',
-    description: 'Description of Event 1',
-    imageURL: '/Images/alexandre-pellaes-6vAjp0pscX0-unsplash.jpg',
-    date: '25 oct, 2021',
-    price: 'EGP 200.00',
-    rating: 4,
-    save: false,
-    category: 'Music',
-  },
-  {
-    id: 2,
-    title: 'Event 2',
-    description: 'Description of Event 2',
-    imageURL: '/Images/alexandre-pellaes-6vAjp0pscX0-unsplash.jpg',
-    date: '25 oct, 2021',
-    price: 'EGP 200.00',
-    rating: 2,
-    save: false,
-    category: 'Music',
-  },
-  {
-    id: 3,
-    title: 'Event 3',
-    description: 'Description of Event 3',
-    imageURL: '/Images/alexandre-pellaes-6vAjp0pscX0-unsplash.jpg',
-    date: '25 oct, 2021',
-    price: 'EGP 200.00',
-    rating: 5,
-    save: false,
-    category: 'Celebration',
-  },
-  {
-    id: 4,
-    title: 'Event 4',
-    description: 'Description of Event 4',
-    imageURL: '/Images/alexandre-pellaes-6vAjp0pscX0-unsplash.jpg',
-    date: '25 oct, 2021',
-    price: 'EGP 200.00',
-    rating: 4,
-    save: false,
-    category: 'Celebration',
-  },
-  {
-    id: 5,
-    title: 'Event 5',
-    description: 'Description of Event 5',
-    imageURL: '/Images/alexandre-pellaes-6vAjp0pscX0-unsplash.jpg',
-    date: '25 oct, 2021',
-    price: 'EGP 200.00',
-    rating: 1,
-    save: false,
-    category: 'Music',
-  },
-  {
-    id: 6,
-    title: 'Event 6',
-    description: 'Description of Event 6',
-    imageURL: '/Images/alexandre-pellaes-6vAjp0pscX0-unsplash.jpg',
-    date: '25 oct, 2021',
-    price: 'EGP 200.00',
-    rating: 1,
-    save: false,
-    category: 'Paint',
-  },
-  {
-    id: 7,
-    title: 'Event 7',
-    description: 'Description of Event 7',
-    imageURL: '/Images/alexandre-pellaes-6vAjp0pscX0-unsplash.jpg',
-    date: '25 oct, 2021',
-    price: 'EGP 200.00',
-    rating: 1,
-    save: false,
-    category: 'Music',
-  },
-  {
-    id: 8,
-    title: 'Event 8',
-    description: 'Description of Event 8',
-    imageURL: '/Images/alexandre-pellaes-6vAjp0pscX0-unsplash.jpg',
-    date: '25 oct, 2021',
-    price: 'EGP 200.00',
-    rating: 1,
-    save: false,
-    category: 'Spa',
-  },
-  // Add more events as needed
-  ];
-
-  export const categories = [
-    { label: 'All Categories', value: '' },
-    { label: 'Music', value: 'Music', icon: <FaMusic /> },
-    { label: 'Paint', value: 'Paint', icon: <FaPaintRoller /> },
-    { label: 'Spa', value: 'Spa', icon: <FaSpa /> },
-    { label: 'Celebration', value: 'Celebration', icon: <MdCelebration /> },
-  ];

@@ -27,7 +27,7 @@ const Navbar = () => {
 
   useEffect(() => {
     if (!userType) {
-      navigate('/welcome');
+      navigate('/Welcome');
     }
     const handleScroll = () => {
       const scrolled = window.scrollY > 0;
@@ -52,11 +52,11 @@ const Navbar = () => {
   };
 
   const getVisibleNavLinks = () => {
-    const filteredNavLinks = navLinks.slice(1, 5);
+    const filteredNavLinks = navLinks.slice(1, 6);
     if (userType === 'Attendee' || userType === 'attendee') {
       return filteredNavLinks.filter((_, index) => index !== 1);
     }
-    return filteredNavLinks.filter((_, index) => index !== 0);
+    return filteredNavLinks.filter((_, index) => index !== 0 && index !== 2);
   };
 
   const isCreatePage = location.pathname === '/Create' || location.pathname === '/Ticket' || location.pathname === '/Checkout';
@@ -81,7 +81,6 @@ const Navbar = () => {
                     key={navLink.label}
                     to={navLink.href}
                     className='text-[#2B2118] hover:text-[#A8763E] transition duration-500 px-4 py-2 rounded-md text-sm font-semibold flex-none'
-                    activeClassName="text-[#A8763E]"
                     onClick={closeNavbar}
                   >
                     {navLink.label}
@@ -142,7 +141,6 @@ const Navbar = () => {
                 key={navLink.label}
                 to={navLink.href}
                 className='text-[#2B2118] hover:text-[#A8763E] transition duration-500 block px-6 py-2 rounded-md text-base font-medium'
-                activeClassName="text-[#A8763E]"
                 onClick={closeNavbar}
               >
                 {navLink.label}

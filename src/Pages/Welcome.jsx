@@ -33,10 +33,10 @@ const Welcome = () => {
       console.log('User role updated:', response.data);
       if (role === 'attendee') {
         localStorage.setItem("user_type", 'Attendee');
-        navigate('/Home');
+        navigate('/');
       } else if (role === 'creator') {
         localStorage.setItem("user_type", 'Organizer');
-        navigate('/Home');
+        navigate('/');
       }
     } catch (error) {
       console.error('Error updating user role:', error);

@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 
-const Ticket = ({ eventId }) => {
+const Ticket = () => {
   const [ticketData, setTicketData] = useState({
     title: '',
-    priceType: 'Free',
     price: 0,
-    startDate: '',
-    endDate: '',
-    numberOfTickets: '',
-    eventId: eventId, // Ensure eventId is included in the initial state
+    start_date: '',
+    end_date: '',
+    number_of_tickets: '',
+    eventId: '',
   });
+
+  useEffect(() => {
+    const eventId = localStorage.getItem('eventId');
+    if (eventId) {
+      setTicketData((prevTicketData) => ({
+        ...prevTicketData,
+        eventId: eventId,
+      }));
+    } else {
+      alert('Event ID not found in local storage');
+    }
+  }, []);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -22,42 +33,57 @@ const Ticket = ({ eventId }) => {
     }));
   };
 
-  const handlePriceTypeChange = (type) => {
-    setTicketData((prevTicketData) => ({
-      ...prevTicketData,
-      priceType: type,
-      price: type === 'Free' ? 0 : '', // Reset price if "Free" is selected
-    }));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     try {
+      const userId = JSON.parse(localStorage.getItem('user'))?._id;
+      if (!userId) {
+        throw new Error('userId not found in localStorage');
+      }
+  
+      // Parse number_of_tickets to ensure it's a valid integer
+      const numberOfTickets = parseInt(ticketData.number_of_tickets);
+      if (isNaN(numberOfTickets) || numberOfTickets <= 0) {
+        throw new Error('Number of tickets must be a valid positive number');
+      }
+  
       const response = await axios.post('http://localhost:5000/tickets', {
         ...ticketData,
-        eventId: eventId, // Ensure eventId is included in the request body
-        price: ticketData.priceType === 'Free' ? 0 : ticketData.price,
+        userId: userId,
+        number_of_tickets: numberOfTickets, // Ensure number_of_tickets is sent as a number
       });
+  
       if (response.status === 201) {
         alert('Ticket created successfully');
-        setTicketData({
-          title: '',
-          priceType: 'Free',
-          price: 0,
-          startDate: '',
-          endDate: '',
-          numberOfTickets: '',
-          eventId: eventId, // Ensure eventId is reset after creating ticket
-        });
+  
+        // Update event with availableTickets
+        const eventId = ticketData.eventId;
+  
+        if (eventId) {
+          const eventUpdateResponse = await axios.patch(`http://localhost:5000/event/${eventId}`, {
+            availableTickets: numberOfTickets,
+          });
+  
+          if (eventUpdateResponse.status === 200) {
+            alert('Event updated with available tickets successfully');
+          } else {
+            throw new Error('Failed to update event with available tickets');
+          }
+        } else {
+          throw new Error('Event ID is invalid');
+        }
+  
+        // Additional logic after successful ticket creation
       } else {
-        throw new Error(response.data || 'Failed to create ticket');
+        throw new Error('Failed to create ticket');
       }
     } catch (error) {
       console.error('Error creating ticket:', error.response?.data || error.message);
       alert('Failed to create ticket. Please check console for details.');
     }
   };
-
+  
   const goBack = () => {
     window.history.back();
   };
@@ -82,64 +108,38 @@ const Ticket = ({ eventId }) => {
             value={ticketData.title}
             onChange={handleInputChange}
           />
-
-          <div className="mb-4 mt-10">
-            <div className="flex gap-6 mb-6">
-              <Button
-                type="button"
-                label="Free"
-                onClick={() => handlePriceTypeChange('Free')}
-                customStyle={ticketData.priceType === 'Free' ? 'px-8 py-2 bg-[#A8763E] text-white border-[#A8763E] rounded-full' : 'px-8 py-2 border-[#A8763E] rounded-full'}
-              />
-              <Button
-                type="button"
-                label="Paid"
-                onClick={() => handlePriceTypeChange('Paid')}
-                customStyle={ticketData.priceType === 'Paid' ? 'px-8 py-2 bg-[#A8763E] text-white border-[#A8763E] rounded-full' : 'px-8 py-2 border-[#A8763E] rounded-full'}
-              />
-            </div>
-          </div>
-
           <label className="block text-gray-700 font-semibold mb-2">Price</label>
-
-          <div className={`relative ${ticketData.priceType === 'Free' ? 'cursor-not-allowed' : ''}`}>
-            <input
-              id="price"
-              type="number"
-              className={`w-full px-4 py-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:ring-1 focus:ring-[#6F1A07] ${ticketData.priceType === 'Free' ? 'bg-gray-300 text-gray-600' : ''}`}
-              value={ticketData.priceType === 'Free' ? 0 : ticketData.price}
-              onChange={handleInputChange}
-              disabled={ticketData.priceType === 'Free'}
-            />
-            {ticketData.priceType === 'Free' && (
-              <div className="absolute inset-0 bg-gray-300 opacity-50 cursor-not-allowed" />
-            )}
-          </div>
-          
+          <input
+            id="price"
+            type="number"
+            className="w-full px-4 py-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:ring-1 focus:ring-[#6F1A07]"
+            value={ticketData.price}
+            onChange={handleInputChange}
+          />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <Input
-              id="startDate"
+              id="start_date"
               type="date"
               label="Start Date"
-              name="startDate"
-              value={ticketData.startDate}
+              name="start_date"
+              value={ticketData.start_date}
               onChange={handleInputChange}
             />
             <Input
-              id="endDate"
+              id="end_date"
               type="date"
               label="End Date"
-              name="endDate"
-              value={ticketData.endDate}
+              name="end_date"
+              value={ticketData.end_date}
               onChange={handleInputChange}
             />
           </div>
           <Input
-            id="numberOfTickets"
+            id="number_of_tickets"
             type="number"
             label="Number of Tickets"
-            name="numberOfTickets"
-            value={ticketData.numberOfTickets}
+            name="number_of_tickets"
+            value={ticketData.number_of_tickets}
             onChange={handleInputChange}
           />
           <Button

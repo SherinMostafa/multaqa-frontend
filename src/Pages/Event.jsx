@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Tickets from '../Sections/Tickets';
+import Button from '../Components/Button';
 
 const Event = () => {
   const { eventId } = useParams();
@@ -12,8 +13,8 @@ const Event = () => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/events/${eventId}`);
-        setEvent(response.data);
+        const eventResponse = await axios.get(`http://localhost:5000/events/${eventId}`);
+        setEvent(eventResponse.data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching event:', error);
@@ -21,7 +22,6 @@ const Event = () => {
         setLoading(false);
       }
     };
-
     fetchEvent();
   }, [eventId]);
 
@@ -42,20 +42,30 @@ const Event = () => {
     return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
+  const goBack = () => {
+    window.history.back();
+  };
+
   if (loading) {
     return <div className="mt-10 container mx-auto text-center">Loading...</div>;
   }
 
-  if (error) {
-    return <div className="mt-10 container mx-auto text-center">Error: {error}</div>;
-  }
-
   if (!event) {
-    return <div className="mt-10 container mx-auto text-center">Event not found</div>;
+    return (
+      <div className="container mx-auto text-center flex flex-col gap-y-[55px] mt-16 mb-20">
+        <h2 className='text-3xl md:text-4xl font-bold mt-8 md:mt-12 mb-4 md:mb-6 text-[#6F1A07]'>Event not found</h2>
+        <Button
+          type={'button'}
+          onClick={goBack}
+          customStyle={'px-6 py-4 text-lg'}
+          label={'Go Back'}
+        />
+      </div>
+    );
   }
 
   return (
-    <div className="mt-10 container mx-auto px-4">
+    <div className="mt-10 container mx-auto px-4 mb-20">
       <div className="bg-white shadow-lg rounded-lg p-6 md:p-10">
         {renderEventImage(event.image)}
         <h2 className="text-3xl md:text-4xl font-bold mt-8 md:mt-12 mb-4 md:mb-6 text-[#6F1A07]">{event.title}</h2>
@@ -68,7 +78,7 @@ const Event = () => {
             <p className="text-[#2B2118] mb-6">{event.location}</p>
           </div>
           <div className="w-full lg:w-1/3 mt-10 lg:mt-0">
-            <Tickets availableTickets={event.availableTickets} ticketsTitle="Tickets Title" />
+            <Tickets eventId={eventId} />
           </div>
         </div>
       </div>

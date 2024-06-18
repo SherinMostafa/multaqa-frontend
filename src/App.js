@@ -89,9 +89,8 @@ const MainContent = ({ isScrolled, scrollToTop }) => {
         {navLinks.map((navLink) => (
           <Route key={navLink.label} path={navLink.href} element={navLink.page} />
         ))}
-        {/* Remove events.map() and replace with a single Route for dynamic event rendering */}
         <Route path="/Event/:eventId" element={<Event />} />
-        <Route path="/tickets/:eventId" element={<Ticket />} />
+        <Route path="/Tickets/:eventId" element={<Ticket />} />
       </Routes>
       {!hideFooterRoutes.includes(location.pathname) && <Footer />}
     </>

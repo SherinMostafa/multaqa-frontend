@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { useDropzone } from 'react-dropzone';
@@ -19,11 +19,11 @@ const Create = () => {
   });
 
   const [locationType, setLocationType] = useState('location');
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserId = () => {
-      const userData = localStorage.getItem('user'); // Fetch user data from local storage
+      const userData = localStorage.getItem('user');
       if (userData) {
         const user = JSON.parse(userData);
         return user._id;
@@ -62,25 +62,28 @@ const Create = () => {
     Object.keys(formData).forEach((key) => {
       formDataToSubmit.append(key, formData[key]);
     });
-
+  
     try {
       const response = await axios.post('http://localhost:5000/event', formDataToSubmit, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      if (response.status === 200) {
+  
+      if (response.status === 201) {
+        const eventId = response.data.event._id; // Assuming event ID is returned in response
+        localStorage.setItem('eventId', eventId); // Store eventId in localStorage
         alert('Event created successfully');
         navigate('/Ticket'); // Redirect to the ticket page
       } else {
-        throw new Error(response.data || 'Failed to create event');
+        throw new Error('Failed to create event');
       }
     } catch (error) {
-      console.error('Error creating event:', error.response.data || error.message);
+      console.error('Error creating event:', error.response?.data || error.message);
       alert('Failed to create event. Please check console for details.');
     }
   };
-
+  
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevFormData) => ({
@@ -108,7 +111,6 @@ const Create = () => {
     <div className="container mx-auto px-4 mt-4 mb-20">
       <div className="bg-white bg-opacity-80 backdrop-blur-md shadow-xl rounded-md mx-auto my-5 p-12 mt-10 md:max-w-4xl">
         <h2 className="text-4xl font-bold mb-14 text-[#6F1A07] text-center">Create Event</h2>
-
         <form onSubmit={handleSubmit}>
           <div>
             <div {...getRootProps()} className="dropzone mb-10" style={{ padding: formData.image ? '' : '20px', textAlign: 'center', cursor: 'pointer', border: formData.image ? 'none' : 'dashed 2px grey' }}>
@@ -119,7 +121,6 @@ const Create = () => {
                 <p>Drag 'n' drop an image here, or click to select an image</p>
               )}
             </div>
-
             {formData.image && (
               <div className="mt-4 mb-10">
                 <Button
@@ -164,7 +165,6 @@ const Create = () => {
                 onChange={handleInputChange}
               />
             </div>
-
             <div className="mb-4 mt-10">
               <div className="flex gap-6 mb-6">
                 <Button
@@ -181,7 +181,6 @@ const Create = () => {
                 />
               </div>
             </div>
-
             {locationType === 'location' && (
               <Input
                 id="location"
@@ -193,7 +192,6 @@ const Create = () => {
                 onChange={handleInputChange}
               />
             )}
-
             {locationType === 'onlineUrl' && (
               <Input
                 id="onlineUrl"
@@ -205,7 +203,6 @@ const Create = () => {
                 onChange={handleInputChange}
               />
             )}
-
             <Input
               id="category_id"
               name="category_id"
@@ -223,12 +220,12 @@ const Create = () => {
                 { value: '666cd14aa86bb73a8fe4091f', label: 'Entertainment' },
               ]}
             />
-            
             <Button
               form={true}
               type="submit"
               label="Create Event"
-              customStyle={'w-full sm:w-3/4 md:w-1/2 p-4 mt-8 flex justify-center mx-auto'}          />
+              customStyle={'w-full sm:w-3/4 md:w-1/2 p-4 mt-8 flex justify-center mx-auto'}
+            />
           </div>
         </form>
       </div>

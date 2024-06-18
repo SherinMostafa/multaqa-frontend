@@ -61,8 +61,8 @@ const Cards = ({ events, withSlider, horizontal }) => {
                             <SwiperSlide key={index}>
                                 <div className='mx-auto w-[400px] h-[520px] sm:w-[300px] sm:h-[460px] md:w-[240px] md:h-[440px] xl:w-[280px]'>
                                     <div className="bg-white shadow-md rounded-lg py-6 px-4 hover:shadow-lg duration-300">
-                                        <Link to={`/event/${event._id}`}>
-                                            <h2 className="text-lg font-semibold mb-2">{event.title}</h2>
+                                        <Link to={`/Event/${event._id}`}>
+                                            <h2 className="truncate text-lg font-semibold mb-2">{event.title}</h2>
                                             <p className="truncate text-[#2B2118]">{event.description}</p>
                                             <p className='text-[#2B2118] text-sm mt-4'>{new Date(event.date).toLocaleDateString()}</p>
                                             <p className='text-[#2B2118] text-sm'>{event.price}</p>
@@ -101,13 +101,13 @@ const Cards = ({ events, withSlider, horizontal }) => {
     } else if (horizontal) {
         return (
             <>
-                <Link to={`/event/${eventsState._id}`}>
+                <Link to={`/Event/${eventsState._id}`}>
                     <div className="bg-white shadow-md rounded-lg p-4 mb-8 flex items-center hover:shadow-lg duration-300">
                         <div className='w-1/3'>
                             {renderEventImage(eventsState.image)}
                         </div>
                         <div className='ml-14 w-2/3'>
-                            <h2 className="text-lg font-semibold mb-2">{eventsState.title}</h2>
+                            <h2 className="truncate text-lg font-semibold mb-2">{eventsState.title}</h2>
                             <p className="truncate text-[#2B2118]">{eventsState.description}</p>
                             <p className='text-[#2B2118] text-sm mt-4'>{new Date(eventsState.date).toLocaleDateString()}</p>
                             <p className='text-[#2B2118] text-sm'>{eventsState.price}</p>
@@ -137,8 +137,8 @@ const Cards = ({ events, withSlider, horizontal }) => {
         return (
             <>
                 <div className="bg-white shadow-md rounded-lg py-6 px-4 hover:shadow-lg duration-300">
-                    <Link to={`/event/${eventsState._id}`}>
-                        <h2 className="text-lg font-semibold mb-2">{eventsState.title}</h2>
+                    <Link to={`/Event/${eventsState._id}`}>
+                        <h2 className="truncate text-lg font-semibold mb-2">{eventsState.title}</h2>
                         <p className="truncate text-[#2B2118]">{eventsState.description}</p>
                         <p className='text-[#2B2118] text-sm mt-4'>{new Date(eventsState.date).toLocaleDateString()}</p>
                         <p className='text-[#2B2118] text-sm'>{eventsState.price}</p>
