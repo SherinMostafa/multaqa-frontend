@@ -1,50 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import Button from '../Components/Button';
+import { FaSquarePlus, FaSquareMinus } from "react-icons/fa6";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Button from '../Components/Button';
+import Input from '../Components/Input';
 
-const Tickets = ({ eventId }) => {
+const Tickets = ({ eventId, availableTickets }) => {
   const [quantity, setQuantity] = useState(0);
   const [error, setError] = useState('');
-  const [availableTickets, setAvailableTickets] = useState(0);
-  const [ticketTitle, setTicketTitle] = useState('');
+  const [ticketData, setTicketData] = useState({ title: '', price: 0 });
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchEventDetails = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/events/${eventId}`);
-        const eventData = response.data;
-        setAvailableTickets(eventData.availableTickets);
-      } catch (error) {
-        console.error('Error fetching event details:', error);
-        setError('Error fetching event details. Please try again later.');
-      }
-    };
-
-    const fetchTicketTitle = async () => {
+    const fetchTicketDetails = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/tickets/${eventId}/titles`);
-        const titleData = response.data[0]; // Assuming only one title is returned
-        if (titleData) {
-          setTicketTitle(titleData.title);
+        const ticketDetails = response.data;
+        
+        if (ticketDetails) {
+          setTicketData({
+            title: ticketDetails.title,
+            price: ticketDetails.price,
+          });
         } else {
-          setTicketTitle('No tickets available');
+          setTicketData({
+            title: 'No tickets available',
+            price: 0,
+          });
         }
       } catch (error) {
-        console.error('Error fetching ticket title:', error);
-        setError('Error fetching ticket title. Please try again later.');
+        console.error('Error fetching ticket details:', error);
+        setError('Error fetching ticket details. Please try again later.');
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchEventDetails();
-    fetchTicketTitle();
+    fetchTicketDetails();
   }, [eventId]);
 
   const handleQuantityChange = (e) => {
-    setQuantity(parseInt(e.target.value, 10));
+    const newQuantity = parseInt(e.target.value, 10);
+    if (!isNaN(newQuantity) && newQuantity >= 0 && newQuantity <= availableTickets) {
+      setQuantity(newQuantity);
+    }
   };
 
   const handleIncreaseQuantity = () => {
-    if (quantity < availableTickets) {
+    if (quantity < availableTickets && quantity < 5) {
       setQuantity(quantity + 1);
     }
   };
@@ -56,37 +60,48 @@ const Tickets = ({ eventId }) => {
   };
 
   const handleProceedToCheckout = () => {
-    console.log(`Proceeding to checkout with ${quantity} ticket(s)`);
-    // Implement checkout logic as needed
+    if (quantity > 0) {
+      navigate('/Checkout', {
+        state: {
+          eventId,
+          quantity,
+          price: ticketData.price,
+          title: ticketData.title
+        }
+      });
+    } else {
+      alert('Please select at least one ticket to proceed to checkout.');
+    }
   };
 
+  if (loading) {
+    return <div>Loading ...</div>;
+  }
+
   if (error) {
-    return <div>No Tickets Available</div>;
+    return <div>{error}</div>;
   }
 
   return (
     <div className="max-w-3xl mx-auto bg-white border border-[#6F1A07] shadow-lg rounded-lg overflow-hidden">
       <div className="p-4">
         <div className="flex flex-col space-y-8 justify-between items-center mb-4">
-          <label htmlFor="quantity" className="text-[#2B2118] text-xl font-bold">{ticketTitle}</label>
-          <div className='flex items-center gap-x-6'>
-            <p className="font-semibold text-[#2B2118]">Available Tickets</p>
-            <p className='font-semibold text-lg text-[#A8763E] '>{availableTickets}</p>
-          </div>
+          <h2 className="text-[#6F1A07] text-3xl font-bold">{ticketData.title}</h2>
+          <h2 className="text-[#6F1A07] text-xl font-bold">EGP {ticketData.price}</h2>
           <div className="flex items-center">
-            <div onClick={handleDecreaseQuantity}>
-              <Button label={'-'} customStyle={'px-3 py-1 font-semibold text-[26px] leading-8'} />
+            <div onClick={handleDecreaseQuantity} className="cursor-pointer">
+              <FaSquareMinus color='#6F1A07' size={34} />
             </div>
-            <input
+            <Input
               id="quantity"
               type="text"
               value={quantity}
               onChange={handleQuantityChange}
-              className="w-40 p-2 text-center bg-white"
-              disabled
+              customStyle="w-40 p-2 text-center border-none"
+              disabled={true}
             />
-            <div onClick={handleIncreaseQuantity}>
-              <Button label={'+'} customStyle={'px-3 py-1 font-semibold text-xl leading-8'} />
+            <div onClick={handleIncreaseQuantity} className="cursor-pointer">
+              <FaSquarePlus color='#6F1A07' size={34} />
             </div>
           </div>
         </div>

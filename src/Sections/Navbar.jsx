@@ -52,7 +52,7 @@ const Navbar = () => {
   };
 
   const getVisibleNavLinks = () => {
-    const filteredNavLinks = navLinks.slice(1, 6);
+    const filteredNavLinks = navLinks.slice(1, 5);
     if (userType === 'Attendee' || userType === 'attendee') {
       return filteredNavLinks.filter((_, index) => index !== 1);
     }

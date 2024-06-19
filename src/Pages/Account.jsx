@@ -31,7 +31,7 @@ const Account = () => {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className="bg-[#ECF0F1] mr-6">
+      <div className="bg-[#ECF0F1]">
         <div className="mt-10 space-y-8">
           {accountSettings.map((accountSetting) => (
             <Button
@@ -53,7 +53,7 @@ const Account = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex p-4 mb-20">
+      <div className="flex w-full p-4 mb-20 mx-6">
         {/* Render selected item's content */}
         {selectedItem.content}
       </div>

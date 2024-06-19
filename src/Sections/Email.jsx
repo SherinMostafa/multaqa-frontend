@@ -69,7 +69,7 @@ const Email = () => {
         <h2 className="text-xl font-semibold mb-4">Account Email Address</h2>
         {isLoggedIn && <p className="font-semibold my-8 ml-2">{user.email}</p>}
       </section>
-      <Button type="button" label="Update" customStyle="px-8 py-4 text-[18px] font-bold w-3/4 flex justify-center" onClick={() => setShowModal(true)} />
+      <Button type="button" label="Update" customStyle="px-8 py-4 text-[18px] font-bold flex justify-center" onClick={() => setShowModal(true)} />
 
       {showModal && (
         <form onSubmit={handleSave} className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center z-50">

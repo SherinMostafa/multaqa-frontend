@@ -14,7 +14,9 @@ function Home() {
   const fetchEvents = async () => {
     try {
       const response = await axios.get('http://localhost:5000/events'); // Adjust URL as per your backend endpoint
-      setEvents(response.data);
+      // Filter events that have availableTickets value
+      const filteredEvents = response.data.filter(event => event.availableTickets);
+      setEvents(filteredEvents);
     } catch (error) {
       console.error('Error fetching events:', error);
       // Handle error state if needed
@@ -28,7 +30,7 @@ function Home() {
       </div>
 
       <div className="container mx-auto py-10 sm:py-20">
-        <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-[#2B2118] font-bold mx-4 mb-6 md:mb-10">Upcoming Events</h1>
+        <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-[#2B2118] font-bold mx-4 mb-6 md:mb-10">Suggested Events</h1>
         <div>
           <Cards withSlider={true} events={events} />
         </div>

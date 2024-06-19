@@ -106,7 +106,7 @@ function Information() {
         <h2 className="text-xl font-semibold mb-4">Profile Image</h2>
         <div
           {...getRootProps()}
-          className="dropzone mb-10"
+          className="dropzone mb-10 w-fit"
           style={{
             padding: formData.profileImg ? '' : '20px',
             textAlign: 'center',
@@ -191,7 +191,7 @@ function Information() {
 
       {errorMessage && <p className="text-red-500 text-center mb-8">{errorMessage}</p>}
 
-      <Button type="submit" form={true} label="Save" customStyle="px-8 py-4 text-[18px] font-bold w-3/4 flex justify-center" />
+      <Button type="submit" form={true} label="Save" customStyle="px-8 py-4 text-[18px] font-bold flex justify-center" />
     </form>
   );
 }

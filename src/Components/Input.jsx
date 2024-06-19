@@ -15,9 +15,11 @@ const Input = ({
   rows,
   cols,
   required,
-  noLabel
+  noLabel,
+  disabled
 }) => {
   const defaultStyle = "w-full px-4 py-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:ring-1 focus:ring-[#6F1A07]";
+  const floatingStyle = "w-full px-4 py-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:border-[#6F1A07] peer";
 
   const CustomDropdown = ({ id, options, value, onChange, customDropdownStyle }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -105,7 +107,7 @@ const Input = ({
     return (
       <div className="relative w-full sm:w-3/4 md:w-1/2 mb-4 md:mb-0">
         <input
-          className="w-full px-4 py-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:border-[#6F1A07] peer"
+          className={floatingStyle + ` ${customStyle}`}
           id={id}
           type={type}
           name={name}
@@ -113,6 +115,7 @@ const Input = ({
           value={value}
           onChange={onChange}
           required={required}
+          disabled={disabled}
         />
         <label
           htmlFor={id}
@@ -150,6 +153,7 @@ const Input = ({
           value={value}
           onChange={onChange}
           required={required}
+          disabled={disabled}
         />
       </div>
     );

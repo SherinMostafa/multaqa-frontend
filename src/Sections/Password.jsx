@@ -97,12 +97,7 @@ const Password = () => {
 
       {errorMessage && <p className="text-red-500 text-center mb-8">{errorMessage}</p>}
 
-      <Button
-        form={true}
-        type="submit"
-        label="Save"
-        customStyle="px-8 py-4 text-[18px] font-bold w-3/4 flex justify-center"
-      />
+      <Button type="submit" form={true} label="Save" customStyle="px-8 py-4 text-[18px] font-bold flex justify-center" />
     </form>
   );
 }

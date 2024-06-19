@@ -3,14 +3,14 @@ import { Link, NavLink } from 'react-router-dom';
 import { navLinks } from '../Constants';
 
 const Footer = () => {
-  const userType = localStorage.getItem('user_type');
+  const userType = localStorage.getItem('userType');
 
   const getVisibleNavLinks = () => {
-    const filteredNavLinks = navLinks.slice(1, 5);
+    const filteredNavLinks = navLinks.slice(1, 6);
     if (userType === 'Attendee' || userType === 'attendee') {
-      return filteredNavLinks.filter((_, index) => index !== 1);
+      return filteredNavLinks.filter((_, index) => index !== 1 && index !== 2);
     }
-    return filteredNavLinks.filter((_, index) => index !== 0);
+    return filteredNavLinks.filter((_, index) => index !== 0 && index !== 2);
   };
 
   return (

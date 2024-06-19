@@ -7,6 +7,7 @@ const Events = () => {
   const [events, setEvents] = useState([]);
   const [categories, setCategories] = useState([]);
   const [filter, setFilter] = useState('');
+  const [loading, setLoading] = useState(true); // Initialize loading state
 
   useEffect(() => {
     fetchEvents();
@@ -16,9 +17,12 @@ const Events = () => {
   const fetchEvents = async () => {
     try {
       const response = await axios.get('http://localhost:5000/events');
-      setEvents(response.data);
+      const eventsData = response.data.filter(event => event.availableTickets); // Filter events with available tickets
+      setEvents(eventsData);
+      setLoading(false); // Set loading to false after fetching events
     } catch (error) {
       console.error('Error fetching events:', error);
+      setLoading(false); // Set loading to false on error
     }
   };
 
@@ -35,7 +39,17 @@ const Events = () => {
     setFilter(e.target.value);
   };
 
-  const filteredEvents = filter ? events.filter(event => event.category_id === filter) : events;
+  const filteredEvents = filter
+    ? events.filter(event => event.category_id === filter)
+    : events;
+
+  if (loading) {
+    return (
+      <div className="container mx-auto py-8 flex my-36">
+        Loading ...
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-8 flex mt-6">
@@ -60,9 +74,15 @@ const Events = () => {
 
       <div className="w-3/4 px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredEvents.map(event => (
-            <Cards key={event._id} events={event} horizontal={false} withSlider={false} />
-          ))}
+          {filteredEvents.length > 0 ? (
+            filteredEvents.map(event => (
+              <Cards key={event._id} events={event} horizontal={false} withSlider={false} />
+            ))
+          ) : (
+            <div className="container text-center flex flex-col items-center gap-y-8 mb-[91px]">
+              <h2 className='text-2xl md:text-3xl font-bold mt-8 md:mt-12 mb-4 md:mb-6 text-[#6F1A07]'>No events found</h2>
+            </div>
+          )}
         </div>
       </div>
     </div>

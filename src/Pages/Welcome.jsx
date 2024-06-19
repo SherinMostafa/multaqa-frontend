@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../Components/Button';
 
 const Welcome = () => {
-  const user_type = localStorage.getItem('user_type');
+  const userType = localStorage.getItem('userType');
   useEffect(()=>{
-    console.log(user_type);
-      if (user_type){
+    console.log(userType);
+      if (userType){
         navigate("/");
       }
   });
@@ -26,15 +26,15 @@ const Welcome = () => {
 
       const response = await axios.post('http://localhost:5000/role', {
         userId: id, // Pass the email
-        role: role,
+        type: role,
       });
 
       console.log('User role updated:', response.data);
       if (role === 'attendee') {
-        localStorage.setItem("user_type", 'Attendee');
+        localStorage.setItem("userType", 'Attendee');
         navigate('/');
       } else if (role === 'creator') {
-        localStorage.setItem("user_type", 'Organizer');
+        localStorage.setItem("userType", 'Organizer');
         navigate('/');
       }
     } catch (error) {

@@ -18,6 +18,8 @@ import Account from "../Pages/Account";
 import Ticket from "../Pages/Ticket";
 import Checkout from "../Pages/Checkout";
 import Likes from "../Pages/Likes";
+import Preview from "../Pages/Preview";
+import Bank from "../Sections/Bank";
 
 export const navLinks = [
   { href: "/", label: "Home", page: <Home /> },
@@ -40,6 +42,8 @@ export const navLinks = [
   { href: "/Settings", label: "Settings", page: <Settings /> },
   { href: "/Ticket", label: "Ticket", page: <Ticket /> },
   { href: "/Checkout", label: "Checkout", page: <Checkout /> },
+  { href: "/Preview", label: "Preview", page: <Preview /> },
+  { href: "/Bank-Cards", label: "Bank", page: <Bank /> },
 ];
 
 // export const eventSettings = [
@@ -53,9 +57,9 @@ export const navLinks = [
 export const accountSettings = [
   { id: 1, href: '/Information', label: 'Account Information', content: <Information /> },
   { id: 2, href: '/Email', label: 'Change Email', content: <Email /> },
-  { id: 3, href: '/Password', label: 'Change Password', content: <Password /> },
-  { id: 4, href: '/Delete', label: 'Close Account', content: <Delete /> },
-  // { id: 4, label: 'Credit/Debit Cards', content: <CreditCards />, href: '/credit-cards' },
+  { id: 3, href: '/Bank-Cards', label: 'Credit/Debit Cards', content: <Bank />, },
+  { id: 4, href: '/Password', label: 'Change Password', content: <Password /> },
+  { id: 5, href: '/Delete', label: 'Close Account', content: <Delete /> },
 ];
 
 export const landingImages = [

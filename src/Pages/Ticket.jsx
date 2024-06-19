@@ -6,12 +6,14 @@ import Input from '../Components/Input';
 const Ticket = () => {
   const [ticketData, setTicketData] = useState({
     title: '',
-    price: 0,
+    price: '',
     start_date: '',
     end_date: '',
     number_of_tickets: '',
     eventId: '',
   });
+
+  const [price, setPrice] = useState('paid'); // Default to 'paid', assuming 'paid' is the default option
 
   useEffect(() => {
     const eventId = localStorage.getItem('eventId');
@@ -27,6 +29,25 @@ const Ticket = () => {
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
+
+    // Validate number_of_tickets input to accept positive integers only
+    if (id === 'number_of_tickets' && value !== '') {
+      const intValue = parseInt(value);
+      if (isNaN(intValue) || intValue <= 0) {
+        alert('Number of tickets must be a valid positive number');
+        return;
+      }
+    }
+
+    // Validate price input to accept non-negative numbers
+    if (id === 'price' && value !== '') {
+      const floatValue = parseFloat(value);
+      if (isNaN(floatValue) || floatValue < 0) {
+        alert('Price must be a valid non-negative number');
+        return;
+      }
+    }
+
     setTicketData((prevTicketData) => ({
       ...prevTicketData,
       [id]: value,
@@ -35,36 +56,35 @@ const Ticket = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       const userId = JSON.parse(localStorage.getItem('user'))?._id;
       if (!userId) {
         throw new Error('userId not found in localStorage');
       }
-  
-      // Parse number_of_tickets to ensure it's a valid integer
+
       const numberOfTickets = parseInt(ticketData.number_of_tickets);
       if (isNaN(numberOfTickets) || numberOfTickets <= 0) {
         throw new Error('Number of tickets must be a valid positive number');
       }
-  
+
       const response = await axios.post('http://localhost:5000/tickets', {
         ...ticketData,
         userId: userId,
-        number_of_tickets: numberOfTickets, // Ensure number_of_tickets is sent as a number
+        number_of_tickets: numberOfTickets,
       });
-  
+
       if (response.status === 201) {
         alert('Ticket created successfully');
-  
+
         // Update event with availableTickets
         const eventId = ticketData.eventId;
-  
+
         if (eventId) {
           const eventUpdateResponse = await axios.patch(`http://localhost:5000/event/${eventId}`, {
             availableTickets: numberOfTickets,
           });
-  
+
           if (eventUpdateResponse.status === 200) {
             alert('Event updated with available tickets successfully');
           } else {
@@ -73,7 +93,7 @@ const Ticket = () => {
         } else {
           throw new Error('Event ID is invalid');
         }
-  
+
         // Additional logic after successful ticket creation
       } else {
         throw new Error('Failed to create ticket');
@@ -83,9 +103,26 @@ const Ticket = () => {
       alert('Failed to create ticket. Please check console for details.');
     }
   };
-  
+
   const goBack = () => {
     window.history.back();
+  };
+
+  const handlePriceChange = (type) => {
+    setPrice(type);
+    if (type === 'paid') {
+      setTicketData((prevTicketData) => ({
+        ...prevTicketData,
+        price: '', // Reset price if switching to 'paid'
+        free: 0, // Clear free if switching to 'paid'
+      }));
+    } else {
+      setTicketData((prevTicketData) => ({
+        ...prevTicketData,
+        price: 0, // Set price to 0 if switching to 'free'
+        free: 0, // Clear free if switching to 'free'
+      }));
+    }
   };
 
   return (
@@ -108,14 +145,45 @@ const Ticket = () => {
             value={ticketData.title}
             onChange={handleInputChange}
           />
-          <label className="block text-gray-700 font-semibold mb-2">Price</label>
-          <input
-            id="price"
-            type="number"
-            className="w-full px-4 py-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:ring-1 focus:ring-[#6F1A07]"
-            value={ticketData.price}
-            onChange={handleInputChange}
-          />
+          <div className="mb-4 mt-10">
+            <div className="flex gap-6 mb-6">
+              <Button
+                type="button"
+                label="Paid"
+                onClick={() => handlePriceChange('paid')}
+                customStyle={price === 'paid' ? 'px-6 py-2 bg-[#A8763E] border-[#A8763E] rounded-full' : 'px-6 py-2 rounded-full'}
+              />
+              <Button
+                type="button"
+                label="Free"
+                onClick={() => handlePriceChange('free')}
+                customStyle={price === 'free' ? 'px-6 py-2 bg-[#A8763E] border-[#A8763E] rounded-full' : 'px-6 py-2 rounded-full'}
+              />
+            </div>
+          </div>
+          {price === 'paid' && (
+            <Input
+              id="price"
+              type="number"
+              label="Price"
+              name="price"
+              customStyle={'mb-10'}
+              value={ticketData.price}
+              onChange={handleInputChange}
+            />
+          )}
+          {price === 'free' && (
+            <Input
+              id="price"
+              type="number"
+              label="Price"
+              name="price"
+              customStyle={'mb-10 bg-gray-50 border-gray-50 cursor-not-allowed'}
+              value={ticketData.price}
+              disabled={true}
+              onChange={handleInputChange}
+            />
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <Input
               id="start_date"
