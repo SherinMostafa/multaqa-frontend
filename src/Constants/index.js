@@ -18,8 +18,12 @@ import Account from "../Pages/Account";
 import Ticket from "../Pages/Ticket";
 import Checkout from "../Pages/Checkout";
 import Likes from "../Pages/Likes";
-import Preview from "../Pages/Preview";
 import Bank from "../Sections/Bank";
+import Confirmation from "../Pages/Confirmation";
+import Main from "../Sections/Main";
+import Plans from "../Sections/Plans";
+import Finance from "../Sections/Finance";
+import Organizer from "../Pages/Organizer";
 
 export const navLinks = [
   { href: "/", label: "Home", page: <Home /> },
@@ -35,24 +39,19 @@ export const navLinks = [
   { href: "/Welcome", label: "Welcome", page: <Welcome /> },
   { href: "/Interests", label: "Interests", page: <Interests /> },
   { href: "/Account", label: "Account", page: <Account /> },
-  { href: "/Information", label: "/Information", page: <Information /> },
-  { href: "/Email", label: "Email", page: <Email /> },
-  { href: "/Password", label: "Password", page: <Password /> },
-  { href: "/Delete", label: "Close Account", page: <Delete /> },
   { href: "/Settings", label: "Settings", page: <Settings /> },
   { href: "/Ticket", label: "Ticket", page: <Ticket /> },
   { href: "/Checkout", label: "Checkout", page: <Checkout /> },
-  { href: "/Preview", label: "Preview", page: <Preview /> },
-  { href: "/Bank-Cards", label: "Bank", page: <Bank /> },
+  { href: "/Bank", label: "Bank", page: <Bank /> },
+  { href: "/Confirmation", label: "Confirmation", page: <Confirmation /> },
+  { href: "/Organizer", label: "Organizer", page: <Organizer /> },
 ];
 
-// export const eventSettings = [
-//   { id: 1, href: '/Create', label: 'Create an event', content: <Create /> },
-//   // { id: 2, href: '/Email', label: 'Change Email', content: <Email /> },
-//   // { id: 3, href: '/Password', label: 'Change Password', content: <Password /> },
-//   // { id: 4, href: '/Delete', label: 'Close Account', content: <Delete /> },
-//   // { id: 4, label: 'Credit/Debit Cards', content: <CreditCards />, href: '/credit-cards' },
-// ];
+export const eventSettings = [
+  { id: 1, href: '/Home', label: 'Home', content: <Main /> },
+  { id: 2, href: '/Plans', label: 'Plans', content: <Plans /> },
+  { id: 3, href: '/Finance', label: 'Finance', content: <Finance /> },
+];
 
 export const accountSettings = [
   { id: 1, href: '/Information', label: 'Account Information', content: <Information /> },

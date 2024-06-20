@@ -9,6 +9,7 @@ import { FaArrowUp } from "react-icons/fa";
 import { AuthProvider } from './Context/AuthContext';
 import Ticket from './Pages/Ticket';
 import Event from './Pages/Event';
+import Organizer from './Pages/Organizer';
 
 const App = () => {
   const [loading, setLoading] = useState(true); // Set loading to true initially
@@ -75,8 +76,8 @@ const App = () => {
 
 const MainContent = ({ isScrolled, scrollToTop }) => {
   const location = useLocation();
-  const hideNavbarRoutes = ['/Register', '/Login', '/Welcome', '/Interests'];
-  const hideFooterRoutes = ['/Welcome', '/Interests', '/Create', '/Ticket', '/Checkout'];
+  const hideNavbarRoutes = ['/Register', '/Login', '/Welcome', '/Interests', '/Confirmation'];
+  const hideFooterRoutes = ['/Welcome', '/Interests', '/Create', '/Ticket', '/Checkout', '/Confirmation'];
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -89,6 +90,7 @@ const MainContent = ({ isScrolled, scrollToTop }) => {
         {navLinks.map((navLink) => (
           <Route key={navLink.label} path={navLink.href} element={navLink.page} />
         ))}
+        <Route path="/Organizer/:userId" element={<Organizer />} />
         <Route path="/Event/:eventId" element={<Event />} />
         <Route path="/Tickets/:eventId" element={<Ticket />} />
       </Routes>

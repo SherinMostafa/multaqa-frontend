@@ -96,6 +96,15 @@ const Navbar = () => {
                     {user.fname} {user.lname}
                   </div>
                   <div className="absolute right-0 top-6 z-50 w-48 bg-white rounded-md shadow-lg overflow-hidden transition-all duration-300 max-h-0 group-hover:max-h-96 group-hover:py-2">
+                    {userType === 'Organizer' && (
+                      <NavLink
+                        to="/Settings"
+                        className="block pl-6 py-2 text-sm text-[#2B2118] hover:text-[#A8763E] transition duration-500"
+                        onClick={closeNavbar}
+                      >
+                        Manage Events
+                      </NavLink>
+                    )}
                     <NavLink
                       to={{
                         pathname: '/Account',

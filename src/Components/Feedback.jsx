@@ -1,18 +1,70 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MdFavorite, MdFavoriteBorder, MdOutlineMoreHoriz } from "react-icons/md";
 import Button from '../Components/Button';
 import Report from '../Sections/Report';
+import axios from 'axios';
 
 const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
+    const [user, setUser] = useState(null); // State to store user object from localStorage
     const [saved, setSaved] = useState(isSaved);
     const [showReportForm, setShowReportForm] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
 
-    const toggleSaved = () => {
+    useEffect(() => {
+        // Load user object from localStorage
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        setUser(storedUser);
+    }, []);
+
+    const handleSaveEvent = async (newSaved) => {
+        if (!user || !user._id) {
+            console.error('User ID not found in user object');
+            return;
+        }
+
+        try {
+            const requestData = {
+                user_id: user._id,
+                event_id: eventId
+            };
+
+            let response;
+
+            if (newSaved) {
+                // Save event
+                response = await axios.post('http://localhost:5000/attendee/saveEvent', requestData);
+                if (response.status === 200) {
+                    console.log('Event saved successfully:', response.data);
+                    setSaved(true); // Update saved state after successful save
+                    onSaveChange(true); // Update parent component's state
+                } else {
+                    console.error('Error saving event:', response.data.error);
+                }
+            } else {
+                // Unsave event
+                response = await axios.delete('http://localhost:5000/attendee/saveEvent', {
+                    data: requestData
+                });
+                if (response.status === 200) {
+                    console.log('Event unsaved successfully:', response.data);
+                    setSaved(false); // Update saved state after successful unsave
+                    onSaveChange(false); // Update parent component's state
+                } else {
+                    console.error('Error unsaving event:', response.data.error);
+                }
+            }
+        } catch (error) {
+            console.error('Error handling save/unsave event:', error);
+            if (error.response) {
+                console.error('Response data:', error.response.data);
+            }
+        }
+    };
+
+    const toggleSaved = async () => {
         const newSaved = !saved;
-        setSaved(newSaved);
-        onSaveChange(newSaved);
+        await handleSaveEvent(newSaved); // Call handleSaveEvent with newSaved
     };
 
     const handleToggleDropdown = () => {

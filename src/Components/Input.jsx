@@ -16,7 +16,8 @@ const Input = ({
   cols,
   required,
   noLabel,
-  disabled
+  disabled,
+  checkboxOptions,
 }) => {
   const defaultStyle = "w-full px-4 py-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:ring-1 focus:ring-[#6F1A07]";
   const floatingStyle = "w-full px-4 py-2 border border-gray-300 rounded bg-transparent focus:outline-none focus:border-[#6F1A07] peer";
@@ -46,7 +47,7 @@ const Input = ({
       }
     };
 
-    const defaultLabel = options.length > 0 ? options[0].label : 'All Categories'; // Default label based on the first option
+    const defaultLabel = options.length > 0 ? options[0].label : 'All Categories';
 
     return (
       <div className="relative" ref={dropdownRef}>
@@ -82,7 +83,7 @@ const Input = ({
           options={selectOptions}
           value={value}
           onChange={onChange}
-          customDropdownStyle={customStyle} // Pass customStyle as customDropdownStyle
+          customDropdownStyle={customStyle}
         />
       </div>
     );
@@ -101,6 +102,26 @@ const Input = ({
           onChange={onChange}
           required={required}
         />
+      </div>
+    );
+  } else if (checkboxOptions) {
+    return (
+      <div className="mb-4">
+        <label className=" text-xl block text-[#6F1A07] font-bold mb-6">{label}</label>
+        <div className="flex flex-wrap gap-12">
+          {checkboxOptions.map((option) => (
+            <div key={option.value} className="flex items-center">
+              <input
+                type="checkbox"
+                name={option.value}
+                checked={value === option.value}
+                onChange={(e) => onChange({ target: { id, value: e.target.checked ? option.value : '' } })}
+                className="form-checkbox h-5 w-5 text-[#6F1A07] border-gray-300 focus:border-[#6F1A07] focus:ring-[#6F1A07]"
+              />
+              <span className="ml-2">{option.label}</span>
+            </div>
+          ))}
+        </div>
       </div>
     );
   } else if (withFloatingEffect) {

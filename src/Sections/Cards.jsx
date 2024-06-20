@@ -13,16 +13,23 @@ const Cards = ({ events, withSlider, horizontal }) => {
     const [eventWithOpenReport, setEventWithOpenReport] = useState(null);
 
     useEffect(() => {
-        setEventsState(events);
+        if (Array.isArray(events)) {
+            setEventsState(events);
+        } else if (events) {
+            setEventsState([events]);
+        }
     }, [events]);
 
     const handleSaveChange = (eventId, newSavedValue) => {
-        setEventsState(prevEvents =>
-            prevEvents.map(event =>
-                event._id === eventId ? { ...event, isSaved: newSavedValue } : event
-            )
-        );
-        // Implement save functionality here if needed
+        setEventsState(prevEvents => {
+            if (Array.isArray(prevEvents)) {
+                return prevEvents.map(event =>
+                    event._id === eventId ? { ...event, isSaved: newSavedValue } : event
+                );
+            } else {
+                return prevEvents._id === eventId ? { ...prevEvents, isSaved: newSavedValue } : prevEvents;
+            }
+        });
     };
 
     const renderEventImage = (imageData) => {
@@ -101,22 +108,22 @@ const Cards = ({ events, withSlider, horizontal }) => {
     } else if (horizontal) {
         return (
             <>
-                <Link to={`/Event/${eventsState._id}`}>
+                <Link to={`/Event/${eventsState[0]._id}`}>
                     <div className="bg-white shadow-md rounded-lg p-4 mb-8 flex items-center hover:shadow-lg duration-300">
                         <div className='w-1/3'>
-                            {renderEventImage(eventsState.image)}
+                            {renderEventImage(eventsState[0].image)}
                         </div>
                         <div className='ml-14 w-2/3'>
-                            <h2 className="truncate text-lg font-semibold mb-2">{eventsState.title}</h2>
-                            <p className="truncate text-[#2B2118]">{eventsState.description}</p>
-                            <p className='text-[#2B2118] text-sm mt-4'>{new Date(eventsState.date).toLocaleDateString()}</p>
-                            <p className='text-[#2B2118] text-sm'>{eventsState.price}</p>
+                            <h2 className="truncate text-lg font-semibold mb-2">{eventsState[0].title}</h2>
+                            <p className="truncate text-[#2B2118]">{eventsState[0].description}</p>
+                            <p className='text-[#2B2118] text-sm mt-4'>{new Date(eventsState[0].date).toLocaleDateString()}</p>
+                            <p className='text-[#2B2118] text-sm'>{eventsState[0].price}</p>
                             <Feedback
-                                rating={eventsState.rating}
-                                isSaved={eventsState.isSaved}
-                                onSaveChange={(newSavedValue) => handleSaveChange(eventsState._id, newSavedValue)}
-                                onReport={() => setEventWithOpenReport(eventsState)}
-                                eventId={eventsState._id}
+                                rating={eventsState[0].rating}
+                                isSaved={eventsState[0].isSaved}
+                                onSaveChange={(newSavedValue) => handleSaveChange(eventsState[0]._id, newSavedValue)}
+                                onReport={() => setEventWithOpenReport(eventsState[0])}
+                                eventId={eventsState[0]._id}
                             />
                         </div>
                     </div>
@@ -137,19 +144,19 @@ const Cards = ({ events, withSlider, horizontal }) => {
         return (
             <>
                 <div className="bg-white shadow-md rounded-lg py-6 px-4 hover:shadow-lg duration-300">
-                    <Link to={`/Event/${eventsState._id}`}>
-                        <h2 className="truncate text-lg font-semibold mb-2">{eventsState.title}</h2>
-                        <p className="truncate text-[#2B2118]">{eventsState.description}</p>
-                        <p className='text-[#2B2118] text-sm mt-4'>{new Date(eventsState.date).toLocaleDateString()}</p>
-                        <p className='text-[#2B2118] text-sm'>{eventsState.price}</p>
-                        {renderEventImage(eventsState.image)}
+                    <Link to={`/Event/${eventsState[0]._id}`}>
+                        <h2 className="truncate text-lg font-semibold mb-2">{eventsState[0].title}</h2>
+                        <p className="truncate text-[#2B2118]">{eventsState[0].description}</p>
+                        <p className='text-[#2B2118] text-sm mt-4'>{new Date(eventsState[0].date).toLocaleDateString()}</p>
+                        <p className='text-[#2B2118] text-sm'>{eventsState[0].price}</p>
+                        {renderEventImage(eventsState[0].image)}
                     </Link>
                     <Feedback
-                        rating={eventsState.rating}
-                        isSaved={eventsState.isSaved}
-                        onSaveChange={(newSavedValue) => handleSaveChange(eventsState._id, newSavedValue)}
-                        onReport={() => setEventWithOpenReport(eventsState)}
-                        eventId={eventsState._id}
+                        rating={eventsState[0].rating}
+                        isSaved={eventsState[0].isSaved}
+                        onSaveChange={(newSavedValue) => handleSaveChange(eventsState[0]._id, newSavedValue)}
+                        onReport={() => setEventWithOpenReport(eventsState[0])}
+                        eventId={eventsState[0]._id}
                     />
                 </div>
                 {eventWithOpenReport && (

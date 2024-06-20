@@ -53,7 +53,7 @@ const Account = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex w-full p-4 mb-20 mx-6">
+      <div className="flex w-3/4 p-4 mb-20 mx-6">
         {/* Render selected item's content */}
         {selectedItem.content}
       </div>

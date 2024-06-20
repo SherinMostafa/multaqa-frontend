@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
+import { useNavigate } from 'react-router-dom';
 
 const Ticket = () => {
+  const navigate = useNavigate();
+
   const [ticketData, setTicketData] = useState({
     title: '',
     price: '',
@@ -75,25 +78,27 @@ const Ticket = () => {
       });
 
       if (response.status === 201) {
-        alert('Ticket created successfully');
-
+        
         // Update event with availableTickets
         const eventId = ticketData.eventId;
-
+        
         if (eventId) {
           const eventUpdateResponse = await axios.patch(`http://localhost:5000/event/${eventId}`, {
             availableTickets: numberOfTickets,
           });
-
+          
           if (eventUpdateResponse.status === 200) {
-            alert('Event updated with available tickets successfully');
+            console.log('Event updated with available tickets successfully');
           } else {
             throw new Error('Failed to update event with available tickets');
           }
         } else {
           throw new Error('Event ID is invalid');
         }
-
+        
+        alert('Ticket created successfully');
+        navigate(`/Event/${eventId}`);
+        
         // Additional logic after successful ticket creation
       } else {
         throw new Error('Failed to create ticket');

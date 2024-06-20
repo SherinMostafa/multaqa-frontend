@@ -88,14 +88,14 @@ const Event = () => {
   return (
     <div className="mt-10 container mx-auto px-4 mb-20">
       <div className="bg-white shadow-lg rounded-lg p-6 md:p-10">
-        <div className="flex flex-col lg:flex-row justify-between">
+        <img
+          src={`data:image/jpeg;base64,${event.image}`}
+          alt="Event"
+          className="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg"
+        />
+        <div className="flex flex-col lg:flex-row justify-between mt-8 md:mt-12">
           <div className="w-full lg:w-2/3">
-            <img
-              src={`data:image/jpeg;base64,${event.image}`}
-              alt="Event"
-              className="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg"
-            />
-            <h2 className="text-3xl md:text-4xl font-bold mt-8 md:mt-12 mb-4 md:mb-6 text-[#6F1A07]">{event.title}</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6 text-[#6F1A07]">{event.title}</h2>
             <p className="text-[#2B2118] leading-relaxed mb-6">{event.description}</p>
             <p className="text-[#2B2118] text-lg font-semibold mb-2">Date and Time:</p>
             <p className="text-[#2B2118] mb-6">{new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} - {event.time}</p>
