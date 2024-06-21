@@ -12,6 +12,12 @@ const Organizer = () => {
   const [followersCount, setFollowersCount] = useState(0);
   const [isFollowed, setIsFollowed] = useState(false);
 
+  // Function to check follow status
+  const checkFollowStatus = (userId) => {
+    const isFollowedInStorage = localStorage.getItem(`followed_${userId}`);
+    return isFollowedInStorage === 'true';
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -29,10 +35,12 @@ const Organizer = () => {
 
         // Fetch events data
         const eventsResponse = await axios.get(`http://localhost:5000/events/creator/${userId}`);
-        // console.log(eventsResponse.data);
         if (eventsResponse.data) {
           setEventsData(eventsResponse.data);
         }
+
+        // Set initial follow status
+        setIsFollowed(checkFollowStatus(userId));
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -43,7 +51,7 @@ const Organizer = () => {
 
   const handleFollow = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem('user')); // Parse the JSON string if necessary
+      const user = JSON.parse(localStorage.getItem('user'));
       const response = await axios.post('http://localhost:5000/follow', {
         attendee_id: user._id,
         organizer_id: userId,
@@ -51,6 +59,7 @@ const Organizer = () => {
       if (response.status === 200) {
         setIsFollowed(true);
         setFollowersCount(prevCount => prevCount + 1);
+        localStorage.setItem(`followed_${userId}`, 'true');
       }
     } catch (error) {
       console.error('Error following organizer:', error);
@@ -59,7 +68,7 @@ const Organizer = () => {
 
   const handleUnfollow = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem('user')); // Parse the JSON string if necessary
+      const user = JSON.parse(localStorage.getItem('user'));
       const response = await axios.post('http://localhost:5000/unfollow', {
         attendee_id: user._id,
         organizer_id: userId,
@@ -67,6 +76,7 @@ const Organizer = () => {
       if (response.status === 200) {
         setIsFollowed(false);
         setFollowersCount(prevCount => prevCount - 1);
+        localStorage.removeItem(`followed_${userId}`);
       }
     } catch (error) {
       console.error('Error unfollowing organizer:', error);
