@@ -3,6 +3,7 @@ import { MdFavorite, MdFavoriteBorder, MdOutlineMoreHoriz } from "react-icons/md
 import Button from '../Components/Button';
 import Report from '../Sections/Report';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
     const [user, setUser] = useState(null);
@@ -10,6 +11,8 @@ const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
     const [showReportForm, setShowReportForm] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
+
+    const navigate = useNavigate();
 
     // State to manage saved events in local storage
     const [savedEvents, setSavedEvents] = useState(() => {
@@ -31,7 +34,8 @@ const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
     const handleSaveEvent = async (newSaved) => {
         if (!user || !user._id) {
             console.error('User ID not found in user object');
-            return;
+            alert('Please login to your account.');
+            // navigate('/Login');
         }
 
         try {
@@ -85,8 +89,15 @@ const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
     };
 
     const handleReportEvent = () => {
-        onReport();
-        setIsDropdownOpen(false);
+        if (!user || !user._id) {
+            console.error('User ID not found in user object');
+            navigate('/Login');
+            alert('Please login to your account.');
+            setIsDropdownOpen(false);
+        }
+        else {
+            onReport();
+        }
     };
 
     const handleReportClose = () => {
@@ -97,6 +108,20 @@ const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
     useEffect(() => {
         localStorage.setItem('savedEvents', JSON.stringify(savedEvents));
     }, [savedEvents]);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [dropdownRef]);
 
     return (
         <div className="flex items-center justify-between rounded-md mt-6">

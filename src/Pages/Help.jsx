@@ -1,13 +1,9 @@
 import React from 'react';
-import Search from '../Components/Search';
 
 const Help = () => {
   return (
     <div className="py-10">
       <div className="container mx-auto px-4">
-        {/* Search Bar */}
-        <Search placeholder={'Search for help articles ...'} className={'h-12 rounded-md'} />
-
         {/* Help Articles */}
         <div className="mt-8">
           <h1 className="text-2xl font-bold text-gray-800">Frequently Asked Questions</h1>

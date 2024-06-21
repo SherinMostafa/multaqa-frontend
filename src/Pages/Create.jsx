@@ -37,9 +37,16 @@ const Create = () => {
         ...prevFormData,
         user_id: userId,
       }));
+      // Check if user has filled specific data on backend
+      checkOrganizerData(userId);
+      // Check if user has a bank account
+      checkBankAccount(userId);
     } else {
-      alert('User ID not found in local storage');
+      console.log('User ID not found in local storage');
+      alert('Please login to your account.');
+      navigate('/Login');
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleImageChange = (acceptedFiles) => {
@@ -58,18 +65,42 @@ const Create = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if all required fields are filled
+    if (!isFormDataComplete()) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    // Check if specific data fields are filled on backend
+    const userId = formData.user_id;
+    const organizerData = await checkOrganizerData(userId);
+    if (!organizerData) {
+      alert('Please fill in all required information in Finance section before creating an event.');
+      navigate('/Settings'); // Redirect to Finance page if necessary data is missing
+      return;
+    }
+
+    // Check if user has a bank account
+    const hasBankAccount = await checkBankAccount(userId);
+    if (!hasBankAccount) {
+      alert('Please add a bank account before creating an event.');
+      navigate('/Settings'); // Redirect to Settings page if bank account is missing
+      return;
+    }
+
     const formDataToSubmit = new FormData();
     Object.keys(formData).forEach((key) => {
       formDataToSubmit.append(key, formData[key]);
     });
-  
+
     try {
       const response = await axios.post('http://localhost:5000/event', formDataToSubmit, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-  
+
       if (response.status === 201) {
         const eventId = response.data.event._id; // Assuming event ID is returned in response
         localStorage.setItem('eventId', eventId); // Store eventId in localStorage
@@ -83,7 +114,7 @@ const Create = () => {
       alert('Failed to create event. Please check console for details.');
     }
   };
-  
+
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevFormData) => ({
@@ -106,6 +137,41 @@ const Create = () => {
     onDrop: handleImageChange,
     multiple: false,
   });
+
+  const isFormDataComplete = () => {
+    const { title, description, date, time, location, onlineUrl, category_id } = formData;
+    return title && description && date && time && category_id && (locationType === 'onlineUrl' ? onlineUrl : location);
+  };
+
+  const checkOrganizerData = async (userId) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/organizer/${userId}`);
+      const { accountNumber, companyType, birthDayDate, website_url } = response.data;
+      // Check if specific fields are filled
+      if (!accountNumber || !companyType || !birthDayDate || !website_url) {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error('Error fetching organizer data:', error.response?.data || error.message);
+      return false;
+    }
+  };
+
+  const checkBankAccount = async (userId) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/user/${userId}`);
+      const { bankAccount } = response.data;
+      // Check if user has a bank account
+      if (!bankAccount) {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error('Error fetching user data:', error.response?.data || error.message);
+      return false;
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 mt-4 mb-20">

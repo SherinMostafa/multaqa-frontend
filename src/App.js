@@ -76,8 +76,8 @@ const App = () => {
 
 const MainContent = ({ isScrolled, scrollToTop }) => {
   const location = useLocation();
-  const hideNavbarRoutes = ['/Register', '/Login', '/Welcome', '/Interests', '/Confirmation'];
-  const hideFooterRoutes = ['/Welcome', '/Interests', '/Create', '/Ticket', '/Checkout', '/Confirmation'];
+  const hideNavbarRoutes = ['/Register', '/Login', '/Welcome', '/Interests', '/Confirmation', '/Admin', '/Dashboard'];
+  const hideFooterRoutes = ['/Welcome', '/Interests', '/Create', '/Ticket', '/Checkout', '/Confirmation', '/Admin', '/Dashboard'];
   
   useEffect(() => {
     window.scrollTo(0, 0);

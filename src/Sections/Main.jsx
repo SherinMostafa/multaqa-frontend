@@ -43,7 +43,7 @@ const Main = () => {
               <div className="p-6 bg-white rounded-lg shadow-md">
                 <h2 className="text-xl font-semibold mb-4">Start Create Event</h2>
                 <p className='mb-6 text-sm'>Add all your event details, create new tickets and set up recurring events</p>
-                <Button type="button" label="Create Event" customStyle="px-8 py-4 text-[18px] font-bold flex justify-center" />
+                <Button type="button" linkURL={'/Create'} label="Create Event" customStyle="px-8 py-4 text-[18px] font-bold flex justify-center" />
               </div> 
             </div>
           )

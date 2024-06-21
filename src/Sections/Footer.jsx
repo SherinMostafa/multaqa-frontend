@@ -9,8 +9,10 @@ const Footer = () => {
     const filteredNavLinks = navLinks.slice(1, 6);
     if (userType === 'Attendee' || userType === 'attendee') {
       return filteredNavLinks.filter((_, index) => index !== 1 && index !== 2);
+    } else if (userType === 'Organizer' || userType === 'organizer') {
+      return filteredNavLinks.filter((_, index) => index !== 0 && index !== 2);
     }
-    return filteredNavLinks.filter((_, index) => index !== 0 && index !== 2);
+    return filteredNavLinks.filter((_, index) => index !== 2);
   };
 
   return (

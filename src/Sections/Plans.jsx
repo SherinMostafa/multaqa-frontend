@@ -49,11 +49,16 @@ function Plans() {
                   ))}
                 </div>
               </div>
-              <Button
-                type="button"
-                label="Subscribe"
-                customStyle="px-8 py-4 text-[18px] font-bold w-full"
-              />
+              {/* Conditionally render button based on plan type */}
+              {plan.type === 'Basic' ? (
+                <div className="p-4 font-semibold w-full text-center text-sm bg-gray-50 text-[#A8763E] cursor-default">Current Plan</div>
+              ) : (
+                <Button
+                  type="button"
+                  label="Subscribe"
+                  customStyle="px-8 py-4 text-[18px] font-bold w-full"
+                />
+              )}
             </div>
           ))}
         </div>

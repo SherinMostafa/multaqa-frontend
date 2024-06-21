@@ -55,8 +55,10 @@ const Navbar = () => {
     const filteredNavLinks = navLinks.slice(1, 5);
     if (userType === 'Attendee' || userType === 'attendee') {
       return filteredNavLinks.filter((_, index) => index !== 1);
+    } else if (userType === 'Organizer' || userType === 'organizer') {
+      return filteredNavLinks.filter((_, index) => index !== 0 && index !== 2);
     }
-    return filteredNavLinks.filter((_, index) => index !== 0 && index !== 2);
+    return filteredNavLinks.filter((_, index) => index !== 2);
   };
 
   const isCreatePage = location.pathname === '/Create' || location.pathname === '/Ticket' || location.pathname === '/Checkout';

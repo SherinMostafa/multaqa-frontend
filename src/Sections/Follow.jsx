@@ -5,8 +5,9 @@ import { RiUserFollowLine, RiUserUnfollowFill } from 'react-icons/ri';
 
 const Follow = ({ userId }) => {
   const [creatorData, setCreatorData] = useState(null);
-  const [isFollowed, setIsFollowed] = useState(false); // State to track follow status
-  const [followersCount, setFollowersCount] = useState(0); // State to track number of followers
+  const [isFollowed, setIsFollowed] = useState(false);
+  const [followersCount, setFollowersCount] = useState(0);
+  const [userType, setUserType] = useState(null);
 
   const fetchCreatorDetails = useCallback(async () => {
     try {
@@ -24,21 +25,29 @@ const Follow = ({ userId }) => {
   }, [userId]);
 
   const checkFollowStatus = useCallback(() => {
-    // Simulating follow status retrieval from localStorage or backend
-    // For demo, just setting to true if localStorage contains follow status
     const isFollowedInStorage = localStorage.getItem(`followed_${userId}`);
     setIsFollowed(isFollowedInStorage === 'true');
   }, [userId]);
 
   useEffect(() => {
-    fetchCreatorDetails();
-    checkFollowStatus(); // Check follow status when component mounts
+    const storedUserType = localStorage.getItem('userType');
+    setUserType(storedUserType);
+    
+    // if (!storedUserType) {
+    //   alert('Please log in to your account.');
+    //   return;
+    // }
+
+    if (storedUserType !== 'Organizer') {
+      fetchCreatorDetails();
+      checkFollowStatus();
+    }
   }, [fetchCreatorDetails, checkFollowStatus]);
 
   const handleFollowClick = async (event) => {
-    event.stopPropagation(); // Prevent triggering the navigation
+    event.stopPropagation();
     try {
-      const user = JSON.parse(localStorage.getItem('user')); // Parse the JSON string if necessary
+      const user = JSON.parse(localStorage.getItem('user'));
       const response = await axios.post('http://localhost:5000/follow', {
         attendee_id: user._id,
         organizer_id: userId
@@ -46,7 +55,7 @@ const Follow = ({ userId }) => {
       if (response.status === 200) {
         localStorage.setItem(`followed_${userId}`, 'true');
         setIsFollowed(true);
-        setFollowersCount(prevCount => prevCount + 1); // Increment followers count
+        setFollowersCount(prevCount => prevCount + 1);
       }
     } catch (error) {
       console.error('Error following organizer:', error);
@@ -54,9 +63,9 @@ const Follow = ({ userId }) => {
   };
 
   const handleUnfollowClick = async (event) => {
-    event.stopPropagation(); // Prevent triggering the navigation
+    event.stopPropagation();
     try {
-      const user = JSON.parse(localStorage.getItem('user')); // Parse the JSON string if necessary
+      const user = JSON.parse(localStorage.getItem('user'));
       const response = await axios.post('http://localhost:5000/unfollow', {
         attendee_id: user._id,
         organizer_id: userId
@@ -64,37 +73,41 @@ const Follow = ({ userId }) => {
       if (response.status === 200) {
         localStorage.removeItem(`followed_${userId}`);
         setIsFollowed(false);
-        setFollowersCount(prevCount => prevCount - 1); // Decrement followers count
+        setFollowersCount(prevCount => prevCount - 1);
       }
     } catch (error) {
       console.error('Error unfollowing organizer:', error);
     }
   };
 
+  if (!userType || userType === 'Organizer') {
+    return null; // Hide component if no userType or userType is Organizer
+  }
+
   if (!creatorData) {
     return null; // Return null or loading indicator while fetching data
   }
 
-    return (
-      <div>
-        <h2 className="text-2xl font-semibold mt-10 mb-4 text-[#6F1A07]">Organized By</h2>
-        <div className="flex justify-between items-center mt-8 px-8 py-3 max-w-xl rounded-full bg-gradient-to-r from-[#A8763E] to-[#a8773ec5] text-white shadow-lg">
-          <Link to={`/Organizer/${userId}`} className="flex-grow no-underline">
-            <div className="flex justify-between items-center w-full">
-              <div className='flex flex-col'>
-                <p className="font-semibold text-sm">{`${creatorData.fname} ${creatorData.lname}`}</p>
-                <p className="font-semibold text-xs">{`${followersCount} followers`}</p>
-              </div>
+  return (
+    <div>
+      <h2 className="text-2xl font-semibold mt-10 mb-4 text-[#6F1A07]">Organized By</h2>
+      <div className="flex justify-between items-center mt-8 px-8 py-3 max-w-xl rounded-full bg-gradient-to-r from-[#A8763E] to-[#a8773ec5] text-white shadow-lg">
+        <Link to={`/Organizer/${userId}`} className="flex-grow no-underline">
+          <div className="flex justify-between items-center w-full">
+            <div className='flex flex-col'>
+              <p className="font-semibold text-sm">{`${creatorData.fname} ${creatorData.lname}`}</p>
+              <p className="font-semibold text-xs">{`${followersCount} followers`}</p>
             </div>
-          </Link>
-          {isFollowed ? (
-            <RiUserUnfollowFill onClick={handleUnfollowClick} size='16' className="ml-4 cursor-pointer" />
-          ) : (
-            <RiUserFollowLine onClick={handleFollowClick} size='16' className="ml-4 cursor-pointer" />
-          )}
-        </div>
+          </div>
+        </Link>
+        {isFollowed ? (
+          <RiUserUnfollowFill onClick={handleUnfollowClick} size='16' className="ml-4 cursor-pointer" />
+        ) : (
+          <RiUserFollowLine onClick={handleFollowClick} size='16' className="ml-4 cursor-pointer" />
+        )}
       </div>
-    );
+    </div>
+  );
 };
 
 export default Follow;

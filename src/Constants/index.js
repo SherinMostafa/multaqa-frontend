@@ -24,6 +24,11 @@ import Main from "../Sections/Main";
 import Plans from "../Sections/Plans";
 import Finance from "../Sections/Finance";
 import Organizer from "../Pages/Organizer";
+import Dashboard from "../Admin/Dashboard";
+import Gateway from "../Admin/Gateway";
+import Reports from "../Admin/Sections/Reports";
+import Contacts from "../Admin/Sections/Contacts";
+import Requests from "../Admin/Sections/Requests";
 
 export const navLinks = [
   { href: "/", label: "Home", page: <Home /> },
@@ -45,6 +50,8 @@ export const navLinks = [
   { href: "/Bank", label: "Bank", page: <Bank /> },
   { href: "/Confirmation", label: "Confirmation", page: <Confirmation /> },
   { href: "/Organizer", label: "Organizer", page: <Organizer /> },
+  { href: "/Dashboard", label: "Dashboard", page: <Dashboard /> },
+  { href: "/Admin", label: "Admin", page: <Gateway /> },
 ];
 
 export const eventSettings = [
@@ -59,6 +66,12 @@ export const accountSettings = [
   { id: 3, href: '/Bank-Cards', label: 'Credit/Debit Cards', content: <Bank />, },
   { id: 4, href: '/Password', label: 'Change Password', content: <Password /> },
   { id: 5, href: '/Delete', label: 'Close Account', content: <Delete /> },
+];
+
+export const adminDashboards = [
+  { id: 1, href: '/Reports', label: 'Reports', content: <Reports /> },
+  { id: 2, href: '/Contacts', label: 'Contacts', content: <Contacts /> },
+  { id: 3, href: '/Requests', label: 'Requests', content: <Requests /> },
 ];
 
 export const landingImages = [
