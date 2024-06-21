@@ -1,39 +1,179 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Input from '../Components/Input';
 import Button from '../Components/Button';
+import axios from 'axios';
+import { FcSimCardChip } from 'react-icons/fc';
 
 const Finance = () => {
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [companyType, setCompanyType] = useState([]);
   const [country, setCountry] = useState('Egypt');
   const [fname, setFirstName] = useState('');
   const [lname, setLastName] = useState('');
-  const [birthdate, setBirthdate] = useState('');
-  const [website, setWebsite] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [cardHolderName, setCardHolderName] = useState('');
-  const [password, setPassword] = useState('');
+  const [birthDayDate, setBirthDayDate] = useState('');
+  const [website_url, setWebsite_url] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
-  const [cvv, setCvv] = useState('');
+  const [formData, setFormData] = useState({
+    cardHolderName: '',
+    cardNumber: '',
+    expireDate: '',
+    cvv: '',
+  }); // State to manage form data
+  const [card, setCard] = useState(null); // State to hold the user's card
+  const [userId, setUserId] = useState(null); // State to store the user's ID
 
-  const handleSave = (event) => {
+  useEffect(() => {
+    // Load user data from localStorage
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) {
+      setUserId(storedUser._id);
+      fetchOrganizerData(storedUser._id);
+      if (storedUser.bankAccount) {
+        fetchCard(storedUser.bankAccount);
+      }
+    }
+  }, []);
+  
+  const fetchOrganizerData = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/organizer/${id}`);
+      const data = response.data;
+      // Update state with fetched data
+      console.log('Fetched Organizer Data:', data);
+      setCompanyType(data.companyType || []);
+      setFirstName(data.fname || '');
+      setLastName(data.lname || '');
+      setBirthDayDate(data.birthDayDate || '');
+      setWebsite_url(data.website_url || '');
+      setAccountNumber(data.accountNumber || '');
+    } catch (error) {
+      console.error('Error fetching organizer data:', error.message);
+    }
+  };
+  
+  const fetchCard = async (bankAccount) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/bankAccount/${bankAccount}`);
+      setCard(response.data); // Assuming the response.data is the card object
+    } catch (error) {
+      console.error('Error fetching card:', error);
+    }
+  };  
+
+  const handleInputChange = (e) => {
+    const { id, value, type, checked } = e.target;
+  
+    // For checkboxes (companyType)
+    if (type === 'checkbox') {
+      const updatedCompanyTypes = [...companyType];
+      if (checked) {
+        updatedCompanyTypes.push(value);
+      } else {
+        const index = updatedCompanyTypes.indexOf(value);
+        if (index !== -1) {
+          updatedCompanyTypes.splice(index, 1);
+        }
+      }
+      setCompanyType(updatedCompanyTypes);
+    } else {
+      // For other inputs (fname, lname, birthDayDate, etc.)
+      if (id === 'options') {
+        setCompanyType(e.target.value);
+      } else {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          [id]: value,
+        }));
+      }
+    }
+  };  
+
+  const handleSave = async (event) => {
     event.preventDefault(); // Prevent form submission
-
-    const data = {
-      selectedOptions,
-      country,
-      fname,
-      lname,
-      birthdate,
-      website,
-      cardNumber,
-      cardHolderName,
-      password,
-      accountNumber,
-      cvv,
+  
+    const organizerData = {
+      companyType: companyType,
+      fname: fname,
+      lname: lname,
+      birthDayDate: birthDayDate,
+      website_url: website_url,
+      accountNumber: accountNumber,
     };
+  
+    const bankAccountData = {
+      cardHolderName: formData.cardHolderName,
+      cardNumber: formData.cardNumber,
+      expireDate: formData.expireDate,
+      cvv: formData.cvv,
+    };
+  
+    try {
+      // Update organizer data
+      await axios.patch(`http://localhost:5000/organizer/data/${userId}`, organizerData);
+      console.log('Updated Organizer Data:', organizerData);
+  
+      // Add or update bank account data
+      if (card) {
+        await axios.patch(`http://localhost:5000/bankAccount/${card._id}`, bankAccountData);
+        console.log('Updated Bank Account Data:', bankAccountData);
+      } else {
+        const response = await axios.post('http://localhost:5000/bankAccount', bankAccountData);
+        const updatedBankAccountId = response.data._id;
+        const updatedUserInfoResponse = await axios.get(`http://localhost:5000/users/email/${userId}`);
+        const updatedUserInfo = updatedUserInfoResponse.data;
+        updatedUserInfo.bankAccount = updatedBankAccountId;
+        localStorage.setItem('user', JSON.stringify(updatedUserInfo));
+        setCard(bankAccountData);
+        console.log('Added New Bank Account:', bankAccountData);
+      }
+  
+      alert('Information Saved');
+    } catch (error) {
+      console.error('Error updating data:', error.message);
+      alert('Error saving information. Please try again later.');
+    }
+  };
+  
+  const renderCardDetails = () => {
+    if (!card) {
+      return <p>You currently don't have any debit or credit cards saved.</p>;
+    }
 
-    console.log('Saved Data:', data);
-    alert('Information Saved');
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="relative bg-white rounded-lg shadow-lg overflow-hidden">
+          {/* Card Front */}
+          <div className="px-8 py-6 bg-gradient-to-br from-gray-600 to-gray-900 text-white">
+            <div className="flex justify-between mb-6">
+              <div className="text-xl font-bold">Credit Card</div>
+              <FcSimCardChip size={40} className="text-white" />
+            </div>
+            <div className="text-lg text-gray-200 mb-4 text-center">
+              {card.cardNumber}
+            </div>
+            <div className="flex justify-between">
+              <div className="flex flex-col">
+                <div className="text-sm text-gray-300">Card Holder</div>
+                <div className="text-lg font-semibold">{card.cardHolderName}</div>
+              </div>
+              <div className="flex flex-col items-end">
+                <div className="text-sm text-gray-300">Expires</div>
+                <div className="text-lg font-semibold">{card.expireDate}</div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Card Back (CVV) */}
+          <div className="px-8 py-6 bg-gray-600 text-white">
+            <div className="flex justify-end">
+              <div className="flex flex-col items-end">
+                <div className="text-sm text-gray-300">CVV</div>
+                <div className="text-lg font-semibold">{card.cvv}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -45,118 +185,134 @@ const Finance = () => {
 
         {/* Select Type Section */}
         <section className="my-8">
-            <Input
-                id="options"
-                label="Select Type"
-                type="checkbox"
-                value={selectedOptions}
-                onChange={(e) => setSelectedOptions(e.target.value)}
-                checkboxOptions={[
-                    { value: 'individual', label: 'Individual' },
-                    { value: 'company', label: 'Company' },
-                    { value: 'nonprofit', label: 'Nonprofit' },
-                ]}
-            />
+          <Input
+            id="options"
+            label="Select Type"
+            type="checkbox"
+            value={companyType}
+            onChange={(e) => setCompanyType(e.target.value)}
+            checkboxOptions={[
+              { value: 'individual', label: 'Individual' },
+              { value: 'company', label: 'Company' },
+              { value: 'nonprofit', label: 'Nonprofit' },
+            ]}
+          />
         </section>
 
-          {/* Form Inputs */}
-        <section className='mb-8'>
+        {/* Form Inputs */}
+        <form onSubmit={handleSave}>
+          <section className='mb-8'>
             <Input
-                id="country"
-                label="Country"
-                type="text"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                selectOptions={[{ value: 'Egypt', label: 'Egypt' }]}
+              id="country"
+              label="Country"
+              type="text"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              selectOptions={[{ value: 'Egypt', label: 'Egypt' }]}
             />
             <Input
-                id="fname"
-                label="First Name"
-                type="text"
-                value={fname}
-                onChange={(e) => setFirstName(e.target.value)}
-                customStyle={'w-full'}
-                required={true}
-                />
-            <Input
-                id="lname"
-                label="Last Name"
-                type="text"
-                value={lname}
-                onChange={(e) => setLastName(e.target.value)}
-                customStyle={'w-full'}
-                required={true}
+              id="fname"
+              label="First Name"
+              type="text"
+              value={fname}
+              onChange={(e) => setFirstName(e.target.value)}
+              customStyle={'w-full'}
+              required={true}
             />
             <Input
-                id="birthdate"
-                label="Birthdate"
-                type="date"
-                value={birthdate}
-                onChange={(e) => setBirthdate(e.target.value)}
-                required={true}
+              id="lname"
+              label="Last Name"
+              type="text"
+              value={lname}
+              onChange={(e) => setLastName(e.target.value)}
+              customStyle={'w-full'}
+              required={true}
             />
             <Input
-                id="website"
-                label="Website"
-                type="url"
-                value={website}
-                onChange={(e) => setWebsite(e.target.value)}
-                required={true}
+              id="birthDayDate"
+              label="Birthday"
+              type="date"
+              value={birthDayDate}
+              onChange={(e) => setBirthDayDate(e.target.value)}
+              required={true}
             />
-        </section>
+            <Input
+              id="website_url"
+              label="Website"
+              type="url"
+              value={website_url}
+              onChange={(e) => setWebsite_url(e.target.value)}
+              required={true}
+            />
+          </section>
 
-        {/* Bank Account Information Section */}
-        <section className="mb-8">
-        <h1 className="text-2xl md:text-4xl font-bold pt-6 mb-6 text-[#6F1A07]">Bank Account Information</h1>
-        <hr className='my-4 w-full' />
+          {/* Bank Account Information Section */}
+          <section className="mt-8">
+            <h1 className="text-2xl md:text-4xl font-bold pt-6 mb-6 text-[#6F1A07]">Bank Account Information</h1>
+            <hr className='my-4 w-full' />
 
-        <Input
-            id="cardHolderName"
-            label="Card Holder Name"
-            type="text"
-            value={cardHolderName}
-            onChange={(e) => setCardHolderName(e.target.value)}
-            required={true}
-        />
-        <Input
-            id="cardNumber"
-            label="Card Number"
-            type="text"
-            value={cardNumber}
-            onChange={(e) => setCardNumber(e.target.value)}
-            required={true}
-        />
-        <Input
-            id="accountNumber"
-            label="Account Number"
-            type="text"
-            value={accountNumber}
-            onChange={(e) => setAccountNumber(e.target.value)}
-            required={true}
-        />
-        <Input
-            id="expireDate"
-            label="Expiry Date"
-            type="text"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required={true}
-        />
-        <Input
-            id="cvv"
-            label="CVV"
-            type="text"
-            value={cvv}
-            onChange={(e) => setCvv(e.target.value)}
-            required={true}
-        />
-        <Button
+            {/* Render the card details if the user has a card */}
+            {renderCardDetails()}
+
+            {/* Render the form for adding a new card */}
+            <div className="mt-6">
+              <h2 className="text-xl font-bold mb-4">Add New Card</h2>
+              <Input
+                id="cardHolderName"
+                type="text"
+                label="Card Holder Name"
+                name="cardHolderName"
+                value={formData.cardHolderName}
+                onChange={handleInputChange}
+                required={true}
+              />
+              <Input
+                id="accountNumber"
+                type="text"
+                label="Account Number"
+                name="accountNumber"
+                value={accountNumber}
+                onChange={(e) => setAccountNumber(e.target.value)}
+                required={true}
+              />
+              <Input
+                id="cardNumber"
+                type="text"
+                label="Card Number"
+                name="cardNumber"
+                value={formData.cardNumber}
+                onChange={handleInputChange}
+                required={true}
+              />
+              <Input
+                id="expireDate"
+                type="text"
+                label="Expire Date (MM/YY)"
+                name="expireDate"
+                value={formData.expireDate}
+                onChange={handleInputChange}
+                required={true}
+              />
+              <Input
+                id="cvv"
+                type="text"
+                label="CVV"
+                name="cvv"
+                value={formData.cvv}
+                onChange={handleInputChange}
+                required={true}
+              />
+            </div>
+          </section>
+
+          {/* Save Button */}
+          <Button
             form={true}
             type="submit"
             label="Save"
             customStyle="px-8 py-4 text-[18px] font-bold flex justify-center mt-8"
-        />
-        </section>
+          />
+        </form>
       </div>
     </>
   );

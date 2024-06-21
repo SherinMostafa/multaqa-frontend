@@ -5,6 +5,7 @@ import Tickets from '../Sections/Tickets';
 import Button from '../Components/Button';
 import BarLoader from 'react-spinners/BarLoader';
 import Cards from '../Sections/Cards';
+import Follow from '../Sections/Follow';
 
 const Event = () => {
   const { eventId } = useParams();
@@ -20,12 +21,10 @@ const Event = () => {
   const fetchEvents = async () => {
     try {
       const response = await axios.get('http://localhost:5000/events'); // Adjust URL as per your backend endpoint
-      // Filter events that have availableTickets value
       const filteredEvents = response.data.filter(event => event.availableTickets);
       setEvents(filteredEvents);
     } catch (error) {
       console.error('Error fetching events:', error);
-      // Handle error state if needed
     }
   };
 
@@ -99,14 +98,29 @@ const Event = () => {
             <p className="text-[#2B2118] leading-relaxed mb-6">{event.description}</p>
             <p className="text-[#2B2118] text-lg font-semibold mb-2">Date and Time:</p>
             <p className="text-[#2B2118] mb-6">{new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} - {event.time}</p>
-            <p className="text-[#2B2118] text-lg font-semibold mb-2">Location:</p>
-            <p className="text-[#2B2118] mb-6">{event.location}</p>
+            {event.location ? (
+              <>
+                <p className="text-[#2B2118] text-lg font-semibold mb-2">Location:</p>
+                <p className="text-[#2B2118] mb-6">{event.location}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-[#2B2118] text-lg font-semibold mb-2">Online Link:</p>
+                <p className="text-[#2B2118] mb-6">{event.onlineUrl}</p>
+              </>
+            )}
           </div>
           <div className="w-full lg:w-1/3 mt-10 lg:mt-0">
             <Tickets eventId={eventId} availableTickets={event.availableTickets} />
           </div>
         </div>
+
+        {/* Render Follow Component */}
+        <div className="mt-8">
+          <Follow userId={event.user_id} />
+        </div>
       </div>
+
       <div className="container mx-auto py-10 sm:py-20">
         <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-[#2B2118] font-bold mx-4 mb-6 md:mb-10">Suggested Events</h1>
         <div>

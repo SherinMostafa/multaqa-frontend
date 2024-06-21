@@ -1,21 +1,32 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MdFavorite, MdFavoriteBorder, MdOutlineMoreHoriz } from "react-icons/md";
 import Button from '../Components/Button';
 import Report from '../Sections/Report';
 import axios from 'axios';
 
 const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
-    const [user, setUser] = useState(null); // State to store user object from localStorage
+    const [user, setUser] = useState(null);
     const [saved, setSaved] = useState(isSaved);
     const [showReportForm, setShowReportForm] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
+
+    // State to manage saved events in local storage
+    const [savedEvents, setSavedEvents] = useState(() => {
+        const storedEvents = JSON.parse(localStorage.getItem('savedEvents')) || [];
+        return storedEvents;
+    });
 
     useEffect(() => {
         // Load user object from localStorage
         const storedUser = JSON.parse(localStorage.getItem('user'));
         setUser(storedUser);
     }, []);
+
+    useEffect(() => {
+        // Check if current event is saved
+        setSaved(savedEvents.includes(eventId));
+    }, [savedEvents, eventId]);
 
     const handleSaveEvent = async (newSaved) => {
         if (!user || !user._id) {
@@ -37,6 +48,7 @@ const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
                 if (response.status === 200) {
                     console.log('Event saved successfully:', response.data);
                     setSaved(true); // Update saved state after successful save
+                    setSavedEvents([...savedEvents, eventId]); // Update local saved events
                     onSaveChange(true); // Update parent component's state
                 } else {
                     console.error('Error saving event:', response.data.error);
@@ -49,6 +61,7 @@ const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
                 if (response.status === 200) {
                     console.log('Event unsaved successfully:', response.data);
                     setSaved(false); // Update saved state after successful unsave
+                    setSavedEvents(savedEvents.filter(id => id !== eventId)); // Update local saved events
                     onSaveChange(false); // Update parent component's state
                 } else {
                     console.error('Error unsaving event:', response.data.error);
@@ -64,7 +77,7 @@ const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
 
     const toggleSaved = async () => {
         const newSaved = !saved;
-        await handleSaveEvent(newSaved); // Call handleSaveEvent with newSaved
+        await handleSaveEvent(newSaved);
     };
 
     const handleToggleDropdown = () => {
@@ -72,7 +85,7 @@ const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
     };
 
     const handleReportEvent = () => {
-        onReport(); // This triggers the opening of Report form
+        onReport();
         setIsDropdownOpen(false);
     };
 
@@ -80,10 +93,14 @@ const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
         setShowReportForm(false);
     };
 
+    // Update local storage when savedEvents state changes
+    useEffect(() => {
+        localStorage.setItem('savedEvents', JSON.stringify(savedEvents));
+    }, [savedEvents]);
+
     return (
         <div className="flex items-center justify-between rounded-md mt-6">
             <div className="flex items-center">
-                {/* Render star rating */}
                 {Array.from({ length: 5 }, (_, index) => (
                     <span
                         key={index}
@@ -94,7 +111,6 @@ const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
                 ))}
             </div>
             <div className="flex justify-between items-center">
-                {/* Toggle saved icon */}
                 {saved ? (
                     <MdFavorite
                         className="text-[#6F1A07] cursor-pointer transition duration-300 hover:text-[#A8763E] mr-4"
@@ -109,13 +125,11 @@ const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
                     />
                 )}
                 <div className='relative' ref={dropdownRef}>
-                    {/* Dropdown for report */}
                     <MdOutlineMoreHoriz
                         className="text-[#6F1A07] cursor-pointer transition duration-300 hover:text-[#A8763E]"
                         fontSize='large'
                         onClick={handleToggleDropdown}
                     />
-                    {/* Report form */}
                     {isDropdownOpen && (
                         <div className="absolute right-0 mt-2 w-56 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                             <div className="px-4 py-2 text-sm" role="none">
@@ -130,14 +144,12 @@ const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
                     )}
                 </div>
             </div>
-            {/* Modal for reporting */}
             {showReportForm && (
                 <div className="fixed top-0 left-0 z-50 w-full h-full bg-gray-800 bg-opacity-80 flex justify-center items-center">
                     <div className="bg-white p-8 rounded-md w-full max-w-md mx-auto">
                         <h2 className="text-2xl font-bold mb-4">Report Event</h2>
                         <Report
                             onSubmit={(data) => {
-                                // Handle submission success if needed
                                 console.log('Report submitted successfully:', data);
                                 alert('Report submitted successfully');
                                 setShowReportForm(false);

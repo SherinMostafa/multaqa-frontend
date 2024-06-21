@@ -24,21 +24,35 @@ const Welcome = () => {
         return;
       }
 
+      
+      
       const response = await axios.post('http://localhost:5000/role', {
         userId: id, // Pass the email
-        type: role,
+        role: role,
       });
+      console.log('userId:', id);
+console.log('role:', role);
 
       console.log('User role updated:', response.data);
-      if (role === 'attendee') {
+      if (role === 'Attendee') {
         localStorage.setItem("userType", 'Attendee');
         navigate('/');
-      } else if (role === 'creator') {
+      } else if (role === 'Organizer') {
         localStorage.setItem("userType", 'Organizer');
         navigate('/');
       }
     } catch (error) {
-      console.error('Error updating user role:', error);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        console.error('Server responded with status:', error.response.status);
+        console.error('Server error message:', error.response.data.message);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received from server:', error.request);
+      } else {
+        // Something happened in setting up the request
+        console.error('Error setting up the request:', error.message);
+      }
     }
   };
 
@@ -54,14 +68,14 @@ const Welcome = () => {
         <div className="flex flex-col items-center justify-between px-4 pb-8 pt-4 bg-white rounded-lg shadow-lg w-full lg:w-96 h-[340px]">
           <img src="/Images/jakob-dalbjorn-cuKJre3nyYc-unsplash.jpg" alt="Attendee" className="w-full h-40 object-cover rounded-t-md" />
           <p className="my-4 text-center">Join and participate in exciting events!</p>
-          <Button label={'Find an experience'} customStyle={'px-6 py-4 text-[18px]'} onClick={() => handleUserRole('attendee')} />
+          <Button label={'Find an experience'} customStyle={'px-6 py-4 text-[18px]'} onClick={() => handleUserRole('Attendee')} />
         </div>
         
-        {/* Creator Section */}
+        {/* Organizer Section */}
         <div className="flex flex-col items-center justify-between px-4 pb-8 pt-4 bg-white rounded-lg shadow-lg w-full lg:w-96 h-[340px]">
-          <img src="/Images/jakob-dalbjorn-cuKJre3nyYc-unsplash.jpg" alt="Creator" className="w-full h-40 object-cover rounded-t-md" />
+          <img src="/Images/jakob-dalbjorn-cuKJre3nyYc-unsplash.jpg" alt="Organizer" className="w-full h-40 object-cover rounded-t-md" />
           <p className="my-4 text-center">Create events and share your knowledge!</p>
-          <Button label={'Plan your best event ever'} customStyle={'px-6 py-4 text-[18px]'} onClick={() => handleUserRole('creator')} />
+          <Button label={'Plan your best event ever'} customStyle={'px-6 py-4 text-[18px]'} onClick={() => handleUserRole('Organizer')} />
         </div>
         
       </div>

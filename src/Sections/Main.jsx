@@ -30,7 +30,7 @@ const Main = () => {
     <div className="flex-1 pl-2 pt-4 lg:p-10 min-h-96">
       <h1 className="text-2xl md:text-4xl font-bold mb-6 text-[#6F1A07]">Welcome, {user.fname} {user.lname}</h1>
       <hr className='my-4 w-full border-gray-300' />
-      <section className="mb-8">
+      <section className="mb-8 space-y-4">
         {isLoading ? (
           <div>Loading...</div> // Display loading indicator while fetching data
         ) : (

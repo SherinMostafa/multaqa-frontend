@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
+import AuthContext from '../Context/AuthContext';
 
 function Register() {
   const [email, setEmail] = useState('');
@@ -13,6 +14,7 @@ function Register() {
   const [emailError, setEmailError] = useState('');
   const [serverMessage, setServerMessage] = useState('');
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext); // Access login function from AuthContext
 
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -41,6 +43,7 @@ function Register() {
       if (response.status === 200) {
 
         localStorage.setItem("user", JSON.stringify(response.data.data));
+        login(email);
         navigate('/Welcome'); // Include email in the state
       }
     } catch (error) {

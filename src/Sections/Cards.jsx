@@ -11,14 +11,21 @@ import Report from '../Sections/Report';
 const Cards = ({ events, withSlider, horizontal }) => {
     const [eventsState, setEventsState] = useState([]);
     const [eventWithOpenReport, setEventWithOpenReport] = useState(null);
+    const [savedEvents, setSavedEvents] = useState(() => {
+        const storedEvents = JSON.parse(localStorage.getItem('savedEvents')) || [];
+        return storedEvents;
+    });
 
     useEffect(() => {
         if (Array.isArray(events)) {
-            setEventsState(events);
+            setEventsState(events.map(event => ({
+                ...event,
+                isSaved: savedEvents.includes(event._id)  // Check if event is saved
+            })));
         } else if (events) {
-            setEventsState([events]);
+            setEventsState([{ ...events, isSaved: savedEvents.includes(events._id) }]);
         }
-    }, [events]);
+    }, [events, savedEvents]);
 
     const handleSaveChange = (eventId, newSavedValue) => {
         setEventsState(prevEvents => {
@@ -27,7 +34,15 @@ const Cards = ({ events, withSlider, horizontal }) => {
                     event._id === eventId ? { ...event, isSaved: newSavedValue } : event
                 );
             } else {
-                return prevEvents._id === eventId ? { ...prevEvents, isSaved: newSavedValue } : prevEvents;
+                return { ...prevEvents, isSaved: newSavedValue };
+            }
+        });
+
+        setSavedEvents(prevSavedEvents => {
+            if (newSavedValue) {
+                return [...prevSavedEvents, eventId];
+            } else {
+                return prevSavedEvents.filter(id => id !== eventId);
             }
         });
     };
@@ -43,6 +58,11 @@ const Cards = ({ events, withSlider, horizontal }) => {
     const handleReportClose = () => {
         setEventWithOpenReport(null);
     };
+
+    // Update local storage when savedEvents state changes
+    useEffect(() => {
+        localStorage.setItem('savedEvents', JSON.stringify(savedEvents));
+    }, [savedEvents]);
 
     if (!eventsState || eventsState.length === 0) {
         return <div>No events available</div>;
@@ -71,7 +91,7 @@ const Cards = ({ events, withSlider, horizontal }) => {
                                         <Link to={`/Event/${event._id}`}>
                                             <h2 className="truncate text-lg font-semibold mb-2">{event.title}</h2>
                                             <p className="truncate text-[#2B2118]">{event.description}</p>
-                                            <p className='text-[#2B2118] text-sm mt-4'>{new Date(event.date).toLocaleDateString()}</p>
+                                            <p className='text-[#2B2118] text-sm mt-4'>{new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} - {event.time}</p>
                                             <p className='text-[#2B2118] text-sm'>{event.price}</p>
                                             {renderEventImage(event.image)}
                                         </Link>
@@ -108,37 +128,37 @@ const Cards = ({ events, withSlider, horizontal }) => {
     } else if (horizontal) {
         return (
             <>
-                <Link to={`/Event/${eventsState[0]._id}`}>
-                    <div className="bg-white shadow-md rounded-lg p-4 mb-8 flex items-center hover:shadow-lg duration-300">
-                        <div className='w-1/3'>
-                            {renderEventImage(eventsState[0].image)}
-                        </div>
-                        <div className='ml-14 w-2/3'>
-                            <h2 className="truncate text-lg font-semibold mb-2">{eventsState[0].title}</h2>
-                            <p className="truncate text-[#2B2118]">{eventsState[0].description}</p>
-                            <p className='text-[#2B2118] text-sm mt-4'>{new Date(eventsState[0].date).toLocaleDateString()}</p>
-                            <p className='text-[#2B2118] text-sm'>{eventsState[0].price}</p>
-                            <Feedback
-                                rating={eventsState[0].rating}
-                                isSaved={eventsState[0].isSaved}
-                                onSaveChange={(newSavedValue) => handleSaveChange(eventsState[0]._id, newSavedValue)}
-                                onReport={() => setEventWithOpenReport(eventsState[0])}
-                                eventId={eventsState[0]._id}
-                            />
-                        </div>
-                    </div>
-                </Link>
-                {eventWithOpenReport && (
-                    <Report
-                        onSubmit={() => {
-                            alert('Report submitted successfully');
-                            setEventWithOpenReport(null);
-                        }}
-                        onClose={handleReportClose}
-                        eventId={eventWithOpenReport._id}
+            <div className="bg-white shadow-md rounded-lg py-6 px-4 hover:shadow-lg duration-300 flex items-center">
+                <div className='w-1/3'>
+                    {renderEventImage(eventsState[0].image)}
+                </div>
+                <div className='ml-4 flex-1'>
+                    <Link to={`/Event/${eventsState[0]._id}`}>
+                        <h2 className="truncate text-lg font-semibold mb-2">{eventsState[0].title}</h2>
+                        <p className="truncate">{eventsState[0].description}</p>
+                        <p className='text-sm mt-2'>{new Date(eventsState[0].date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} - {eventsState[0].time}</p>
+                        <p className='text-sm'>{eventsState[0].price}</p>
+                    </Link>
+                    <Feedback
+                        rating={eventsState[0].rating}
+                        isSaved={eventsState[0].isSaved}
+                        onSaveChange={(newSavedValue) => handleSaveChange(eventsState[0]._id, newSavedValue)}
+                        onReport={() => setEventWithOpenReport(eventsState[0])}
+                        eventId={eventsState[0]._id}
                     />
-                )}
-            </>
+                </div>
+            </div>
+            {eventWithOpenReport && (
+                <Report
+                    onSubmit={() => {
+                        alert('Report submitted successfully');
+                        setEventWithOpenReport(null);
+                    }}
+                    onClose={handleReportClose}
+                    eventId={eventWithOpenReport._id}
+                />
+            )}
+        </>         
         );
     } else {
         return (
@@ -147,7 +167,7 @@ const Cards = ({ events, withSlider, horizontal }) => {
                     <Link to={`/Event/${eventsState[0]._id}`}>
                         <h2 className="truncate text-lg font-semibold mb-2">{eventsState[0].title}</h2>
                         <p className="truncate text-[#2B2118]">{eventsState[0].description}</p>
-                        <p className='text-[#2B2118] text-sm mt-4'>{new Date(eventsState[0].date).toLocaleDateString()}</p>
+                        <p className='text-sm mt-2'>{new Date(eventsState[0].date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} - {eventsState[0].time}</p>
                         <p className='text-[#2B2118] text-sm'>{eventsState[0].price}</p>
                         {renderEventImage(eventsState[0].image)}
                     </Link>
