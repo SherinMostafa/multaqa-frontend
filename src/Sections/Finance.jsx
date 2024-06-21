@@ -37,18 +37,29 @@ const Finance = () => {
     try {
       const response = await axios.get(`http://localhost:5000/organizer/${id}`);
       const data = response.data;
+      
       // Update state with fetched data
       console.log('Fetched Organizer Data:', data);
+  
       setCompanyType(data.companyType || []);
       setFirstName(data.fname || '');
       setLastName(data.lname || '');
-      setBirthDayDate(data.birthDayDate || '');
+      
+      // Convert birthDayDate to 'yyyy-MM-dd' format
+      if (data.birthDayDate) {
+        const date = new Date(data.birthDayDate);
+        const formattedDate = date.toISOString().split('T')[0]; // 'yyyy-MM-dd'
+        setBirthDayDate(formattedDate);
+      } else {
+        setBirthDayDate('');
+      }
+  
       setWebsite_url(data.website_url || '');
       setAccountNumber(data.accountNumber || '');
     } catch (error) {
       console.error('Error fetching organizer data:', error.message);
     }
-  };
+  };  
   
   const fetchCard = async (bankAccount) => {
     try {
@@ -89,50 +100,55 @@ const Finance = () => {
 
   const handleSave = async (event) => {
     event.preventDefault(); // Prevent form submission
-  
+
     const organizerData = {
-      companyType: companyType,
-      fname: fname,
-      lname: lname,
-      birthDayDate: birthDayDate,
-      website_url: website_url,
-      accountNumber: accountNumber,
+        companyType: companyType,
+        fname: fname,
+        lname: lname,
+        birthDayDate: birthDayDate,
+        website_url: website_url,
+        accountNumber: accountNumber,
     };
-  
+
     const bankAccountData = {
-      cardHolderName: formData.cardHolderName,
-      cardNumber: formData.cardNumber,
-      expireDate: formData.expireDate,
-      cvv: formData.cvv,
+        cardHolderName: formData.cardHolderName,
+        cardNumber: formData.cardNumber,
+        expireDate: formData.expireDate,
+        cvv: formData.cvv,
+        userId: userId,
     };
-  
+
     try {
-      // Update organizer data
-      await axios.patch(`http://localhost:5000/organizer/data/${userId}`, organizerData);
-      console.log('Updated Organizer Data:', organizerData);
-  
-      // Add or update bank account data
-      if (card) {
-        await axios.patch(`http://localhost:5000/bankAccount/${card._id}`, bankAccountData);
-        console.log('Updated Bank Account Data:', bankAccountData);
-      } else {
-        const response = await axios.post('http://localhost:5000/bankAccount', bankAccountData);
-        const updatedBankAccountId = response.data._id;
-        const updatedUserInfoResponse = await axios.get(`http://localhost:5000/users/email/${userId}`);
-        const updatedUserInfo = updatedUserInfoResponse.data;
-        updatedUserInfo.bankAccount = updatedBankAccountId;
-        localStorage.setItem('user', JSON.stringify(updatedUserInfo));
-        setCard(bankAccountData);
-        console.log('Added New Bank Account:', bankAccountData);
-      }
-  
-      alert('Information Saved');
+        console.log('Organizer Data:', organizerData);
+        console.log('User ID:', userId);
+        
+        // Update organizer data
+        const response = await axios.patch(`http://localhost:5000/organizer/${userId}`, organizerData);
+        console.log('Updated Organizer Data:', response.data);
+
+        // Add or update bank account data
+        if (card) {
+            await axios.patch(`http://localhost:5000/bankAccount/${card._id}`, bankAccountData);
+            console.log('Updated Bank Account Data:', bankAccountData);
+        } else {
+            const response = await axios.post('http://localhost:5000/bankAccount', bankAccountData);
+            const updatedBankAccountId = response.data._id;
+            const storedUser = JSON.parse(localStorage.getItem('user'));
+            const updatedUserInfoResponse = await axios.get(`http://localhost:5000/users/email/${storedUser.email}`);
+            const updatedUserInfo = updatedUserInfoResponse.data;
+            updatedUserInfo.bankAccount = updatedBankAccountId;
+            localStorage.setItem('user', JSON.stringify(updatedUserInfo));
+            setCard(bankAccountData);
+            console.log('Added New Bank Account:', bankAccountData);
+        }
+
+        alert('Information Saved');
     } catch (error) {
-      console.error('Error updating data:', error.message);
-      alert('Error saving information. Please try again later.');
+        console.error('Error updating data:', error.message);
+        alert('Error saving information. Please try again later.');
     }
-  };
-  
+};
+
   const renderCardDetails = () => {
     if (!card) {
       return <p>You currently don't have any debit or credit cards saved.</p>;
@@ -193,8 +209,8 @@ const Finance = () => {
             onChange={(e) => setCompanyType(e.target.value)}
             checkboxOptions={[
               { value: 'individual', label: 'Individual' },
-              { value: 'company', label: 'Company' },
-              { value: 'nonprofit', label: 'Nonprofit' },
+              { value: 'corperate', label: 'Corperate' },
+              { value: 'non-profit', label: 'Nonprofit' },
             ]}
           />
         </section>
@@ -252,57 +268,59 @@ const Finance = () => {
             <hr className='my-4 w-full' />
 
             {/* Render the card details if the user has a card */}
-            {renderCardDetails()}
+            {card && renderCardDetails()}
 
-            {/* Render the form for adding a new card */}
-            <div className="mt-6">
-              <h2 className="text-xl font-bold mb-4">Add New Card</h2>
-              <Input
-                id="cardHolderName"
-                type="text"
-                label="Card Holder Name"
-                name="cardHolderName"
-                value={formData.cardHolderName}
-                onChange={handleInputChange}
-                required={true}
-              />
-              <Input
-                id="accountNumber"
-                type="text"
-                label="Account Number"
-                name="accountNumber"
-                value={accountNumber}
-                onChange={(e) => setAccountNumber(e.target.value)}
-                required={true}
-              />
-              <Input
-                id="cardNumber"
-                type="text"
-                label="Card Number"
-                name="cardNumber"
-                value={formData.cardNumber}
-                onChange={handleInputChange}
-                required={true}
-              />
-              <Input
-                id="expireDate"
-                type="text"
-                label="Expire Date (MM/YY)"
-                name="expireDate"
-                value={formData.expireDate}
-                onChange={handleInputChange}
-                required={true}
-              />
-              <Input
-                id="cvv"
-                type="text"
-                label="CVV"
-                name="cvv"
-                value={formData.cvv}
-                onChange={handleInputChange}
-                required={true}
-              />
-            </div>
+            {/* Render the form for adding a new card if no card exists */}
+            {!card && (
+              <div className="mt-6">
+                <h2 className="text-xl font-bold mb-4">Add New Card</h2>
+                <Input
+                  id="cardHolderName"
+                  type="text"
+                  label="Card Holder Name"
+                  name="cardHolderName"
+                  value={formData.cardHolderName}
+                  onChange={handleInputChange}
+                  required={true}
+                />
+                <Input
+                  id="accountNumber"
+                  type="text"
+                  label="Account Number"
+                  name="accountNumber"
+                  value={accountNumber}
+                  onChange={(e) => setAccountNumber(e.target.value)}
+                  required={true}
+                />
+                <Input
+                  id="cardNumber"
+                  type="text"
+                  label="Card Number"
+                  name="cardNumber"
+                  value={formData.cardNumber}
+                  onChange={handleInputChange}
+                  required={true}
+                />
+                <Input
+                  id="expireDate"
+                  type="text"
+                  label="Expire Date (MM/YY)"
+                  name="expireDate"
+                  value={formData.expireDate}
+                  onChange={handleInputChange}
+                  required={true}
+                />
+                <Input
+                  id="cvv"
+                  type="text"
+                  label="CVV"
+                  name="cvv"
+                  value={formData.cvv}
+                  onChange={handleInputChange}
+                  required={true}
+                />
+              </div>
+            )}
           </section>
 
           {/* Save Button */}
