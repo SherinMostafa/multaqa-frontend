@@ -11,6 +11,7 @@ const Finance = () => {
   const [lname, setLastName] = useState('');
   const [birthDayDate, setBirthDayDate] = useState('');
   const [website_url, setWebsite_url] = useState('');
+  const [bio, setBio] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
   const [formData, setFormData] = useState({
     cardHolderName: '',
@@ -56,6 +57,7 @@ const Finance = () => {
   
       setWebsite_url(data.website_url || '');
       setAccountNumber(data.accountNumber || '');
+      setBio(data.bio || '');
     } catch (error) {
       console.error('Error fetching organizer data:', error.message);
     }
@@ -85,17 +87,16 @@ const Finance = () => {
         }
       }
       setCompanyType(updatedCompanyTypes);
+    } else if (id === 'bio') {
+      // Directly update bio state
+      setBio(value);
     } else {
       // For other inputs (fname, lname, birthDayDate, etc.)
-      if (id === 'options') {
-        setCompanyType(e.target.value);
-      } else {
         setFormData((prevFormData) => ({
           ...prevFormData,
           [id]: value,
         }));
       }
-    }
   };  
 
   const handleSave = async (event) => {
@@ -107,6 +108,7 @@ const Finance = () => {
         lname: lname,
         birthDayDate: birthDayDate,
         website_url: website_url,
+        bio: bio,
         accountNumber: accountNumber,
     };
 
@@ -128,7 +130,7 @@ const Finance = () => {
 
         // Add or update bank account data
         if (card) {
-            await axios.patch(`http://localhost:5000/bankAccount/${card._id}`, bankAccountData);
+            // await axios.patch(`http://localhost:5000/bankAccount/${card._id}`, bankAccountData);
             console.log('Updated Bank Account Data:', bankAccountData);
         } else {
             const response = await axios.post('http://localhost:5000/bankAccount', bankAccountData);
@@ -209,7 +211,7 @@ const Finance = () => {
             onChange={(e) => setCompanyType(e.target.value)}
             checkboxOptions={[
               { value: 'individual', label: 'Individual' },
-              { value: 'corperate', label: 'Corperate' },
+              { value: 'corporate', label: 'Corporate' },
               { value: 'non-profit', label: 'Nonprofit' },
             ]}
           />
@@ -259,6 +261,14 @@ const Finance = () => {
               value={website_url}
               onChange={(e) => setWebsite_url(e.target.value)}
               required={true}
+            />
+            <Input
+              id="bio"
+              textArea={true}
+              label="Bio"
+              name="bio"
+              value={bio} // Corrected to use the bio state
+              onChange={handleInputChange}
             />
           </section>
 

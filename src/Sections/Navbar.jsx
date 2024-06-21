@@ -4,7 +4,7 @@ import { navLinks } from '../Constants/index';
 import Search from '../Components/Search';
 import Button from '../Components/Button';
 import { CgMenuRightAlt, CgClose } from "react-icons/cg";
-import { PiUserCircle } from "react-icons/pi";
+import { FaUser } from "react-icons/fa";
 import AuthContext from '../Context/AuthContext';
 import axios from 'axios';
 
@@ -92,8 +92,8 @@ const Navbar = () => {
               {isLoggedIn ? (
                 <div className='relative group'>
                   <div className='flex items-center gap-2 text-sm font-semibold text-[#2B2118] transition duration-500 cursor-pointer'>
-                    <PiUserCircle className="h-6 w-6" />
-                    {user.fname} {user.lname}
+                    <FaUser className="p-1 w-5 h-5 mx-auto text-gray-400 border rounded-full" />
+                  {user.fname} {user.lname}
                   </div>
                   <div className="absolute right-0 top-6 z-50 w-48 bg-white rounded-md shadow-lg overflow-hidden transition-all duration-300 max-h-0 group-hover:max-h-96 group-hover:py-2">
                     {userType === 'Organizer' && (
