@@ -68,8 +68,11 @@ const Navbar = () => {
       <nav className={`${isFixed ? 'sticky top-0 left-0 right-0 z-50 shadow-md' : ''} bg-white transition-all duration-500`}>
         <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <div className="flex-shrink-0 text-[#6F1A07] text-lg sm:text-2xl font-bold mr-4">
-              <Link to={'/'} onClick={closeNavbar}>multaqa</Link>
+            <div className="flex-shrink-0 text-[#6F1A07] text-lg sm:text-2xl font-semibold mr-4">
+              <Link to={'/'} onClick={closeNavbar}>
+                <img src="multaqa-logo.png" alt="multaqa" class="hidden md:block w-24" />
+                <img src="multaqa-icon.jpg" alt="multaqa" class="block md:hidden w-8 sm:w-12 border rounded-md" />
+              </Link>
             </div>
             {!isCreatePage && (
               <div className='w-40 sm:w-auto'>
@@ -94,8 +97,8 @@ const Navbar = () => {
               {isLoggedIn ? (
                 <div className='relative group'>
                   <div className='flex items-center gap-2 text-sm font-semibold text-[#2B2118] transition duration-500 cursor-pointer'>
-                    <FaUser className="p-1 w-5 h-5 mx-auto text-gray-400 border rounded-full" />
-                  {user.fname} {user.lname}
+                    <FaUser className="p-1 w-5 h-5 md:w-6 md:h-6 mx-auto text-gray-400 border rounded-full" />
+                    {user.fname} {user.lname}
                   </div>
                   <div className="absolute right-0 top-6 z-50 w-48 bg-white rounded-md shadow-lg overflow-hidden transition-all duration-300 max-h-0 group-hover:max-h-96 group-hover:py-2">
                     {userType === 'Organizer' && (

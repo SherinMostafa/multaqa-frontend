@@ -21,7 +21,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8">
           {/* Logo and Description */}
           <div>
-            <div className="text-lg sm:text-2xl font-bold">
+            <div className="text-lg sm:text-2xl font-semibold">
               <Link to={'/'}>multaqa</Link>
             </div>
             <p className='text-sm mt-4'>Join us for an unforgettable experience with speakers, networking, and more.</p>
