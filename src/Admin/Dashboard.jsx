@@ -6,6 +6,7 @@ import { TbMessageReport } from "react-icons/tb";
 import { MdOutlineContactSupport } from "react-icons/md";
 import { TiUserDeleteOutline } from "react-icons/ti";
 import { adminDashboards } from '../Constants';
+import { VscOrganization } from "react-icons/vsc";
 
 function Dashboard() {
   const admin = JSON.parse(localStorage.getItem('admin'));
@@ -30,8 +31,8 @@ function Dashboard() {
         return <MdOutlineContactSupport />;
       case 'Requests':
         return <TiUserDeleteOutline />;
-    //   case 'Close Account':
-        // return <MdDeleteForever />;
+      case 'Company':
+        return <VscOrganization />;
       default:
         return null;
     }
@@ -63,7 +64,7 @@ function Dashboard() {
 
       {/* Sidebar */}
       <div className="flex">
-        <div className="bg-[#ECF0F1] mr-6 w-fit lg:w-48">
+        <div className="bg-[#ECF0F1] w-fit lg:w-48">
           <div className="mt-10 space-y-8">
             {adminDashboards.map((adminDashboard) => (
               <div

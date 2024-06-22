@@ -66,10 +66,6 @@ const Reports = () => {
                                   <div className="font-semibold">User Email:</div>
                                   <div>{report.email}</div>
                               </div>
-                              {/* <div className="flex gap-4">
-                                  <div className="font-semibold">Status:</div>
-                                  <div>{report.status}</div>
-                              </div> */}
                           </div>
                           <div className="flex justify-between mb-4">
                               <div className="flex gap-4">

@@ -48,16 +48,16 @@ const Contacts = () => {
         <h1 className="text-2xl font-bold text-center">User Contacts</h1>
         <div className='py-8'>
             {contacts.map((contact) => (
-                <div className='flex gap-4 items-center justify-center'>
+                <div className='flex flex-col md:flex-row gap-4 items-center justify-center text-sm md:text-base'>
                     <div key={contact._id} className="flex bg-white rounded-lg shadow-md p-8 mb-4 w-3/4">
                         <div className="flex-auto justify-between">
-                            <div className="flex justify-between mb-4">
+                            <div className="flex-col gap-4 md:flex justify-between mb-4">
                                 <div className="flex gap-4">
                                     <div className="font-semibold">Contact ID:</div>
                                     <div>{contact._id}</div>
                                 </div>    
                             </div>
-                            <div className="flex justify-between mb-4">
+                            <div className="flex-col gap-4 md:flex justify-between mb-4">
                                 <div className="flex gap-4">
                                     <div className="font-semibold">User Name:</div>
                                     <div>{contact.name}</div>
@@ -67,30 +67,16 @@ const Contacts = () => {
                                     <div>{contact.email}</div>
                                 </div>
                             </div>
-                            <div className="flex justify-between mb-4">
-                                {/* <div className="flex gap-4">
-                                    <div className="font-semibold">User Name:</div>
-                                    <div>{contact.name}</div>
-                                </div> */}
+                            <div className="flex-col gap-4 md:flex justify-between mb-4">
                                 <div className="flex gap-4">
                                     <div className="font-semibold">Message:</div>
                                     <div>{contact.message}</div>
                                     </div>
                                 </div>
-                                {/* <div className="flex justify-between">
-                                    <div className="flex gap-4">
-                                        <div className="font-semibold">Created At:</div>
-                                        <div>{new Date(contact.createdAt).toLocaleString()}</div>
-                                    </div>
-                                    <div className="flex gap-4">
-                                        <div className="font-semibold">Updated At:</div>
-                                        <div>{new Date(contact.updatedAt).toLocaleString()}</div>
-                                    </div>
-                                </div> */}
                             </div>
                         </div>
 
-                    <div className="flex items-end ml-4">
+                    <div className="flex lg:flex-col xl:flex 2xl:flex-col items-center justify-center gap-4 w-full md:w-auto">
                         <Button label="Accept" onClick={() => handleAcceptReport(contact._id)} customStyle={'px-8 py-4 font-bold flex justify-center'} />
                     </div>
                 </div>

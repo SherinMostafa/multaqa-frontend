@@ -46,8 +46,7 @@ const Create = () => {
       alert('Please login to your account.');
       navigate('/Login');
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [navigate]);
 
   const handleImageChange = (acceptedFiles) => {
     setFormData((prevFormData) => ({
@@ -160,12 +159,14 @@ const Create = () => {
 
   const checkBankAccount = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/user/${userId}`);
+      const response = await axios.get(`http://localhost:5000/users/id/${userId}`);
       const { bankAccount } = response.data;
       // Check if user has a bank account
+      console.log(bankAccount);
       if (!bankAccount) {
         return false;
       }
+      console.log('User has a bank account:', bankAccount);
       return true;
     } catch (error) {
       console.error('Error fetching user data:', error.response?.data || error.message);

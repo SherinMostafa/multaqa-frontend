@@ -14,6 +14,7 @@ const Main = () => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/events/creator/${user._id}`);
+        console.log(response.data);
         setEvents(response.data);
         setIsLoading(false); // Set loading state to false when data is fetched
       } catch (error) {
@@ -36,7 +37,7 @@ const Main = () => {
         ) : (
           events.length > 0 ? (
             events.map(event => (
-                <Cards key={event._id} horizontal={true} events={event} />
+                <Cards key={event._id} horizontalOrganizer={true} events={event} />
             ))
           ) : (
             <div className="max-w-md gap-6 mb-8">

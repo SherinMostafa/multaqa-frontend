@@ -29,6 +29,7 @@ import Gateway from "../Admin/Gateway";
 import Reports from "../Admin/Sections/Reports";
 import Contacts from "../Admin/Sections/Contacts";
 import Requests from "../Admin/Sections/Requests";
+import Company from "../Admin/Sections/Company";
 
 export const navLinks = [
   { href: "/", label: "Home", page: <Home /> },
@@ -72,6 +73,7 @@ export const adminDashboards = [
   { id: 1, href: '/Reports', label: 'Reports', content: <Reports /> },
   { id: 2, href: '/Contacts', label: 'Contacts', content: <Contacts /> },
   { id: 3, href: '/Requests', label: 'Requests', content: <Requests /> },
+  { id: 4, href: '/Company', label: 'Company', content: <Company /> },
 ];
 
 export const landingImages = [

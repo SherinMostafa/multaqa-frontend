@@ -8,7 +8,7 @@ import { FreeMode, Scrollbar } from 'swiper/modules';
 import Feedback from '../Components/Feedback';
 import Report from '../Sections/Report';
 
-const Cards = ({ events, withSlider, horizontal }) => {
+const Cards = ({ events, withSlider, horizontal, horizontalOrganizer }) => {
     const [eventsState, setEventsState] = useState([]);
     const [eventWithOpenReport, setEventWithOpenReport] = useState(null);
     const [savedEvents, setSavedEvents] = useState(() => {
@@ -138,6 +138,51 @@ const Cards = ({ events, withSlider, horizontal }) => {
                         <p className="truncate">{eventsState[0].description}</p>
                         <p className='text-sm mt-2'>{new Date(eventsState[0].date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} - {eventsState[0].time}</p>
                         <p className='text-sm'>{eventsState[0].price}</p>
+                    </Link>
+                    <Feedback
+                        rating={eventsState[0].rating}
+                        isSaved={eventsState[0].isSaved}
+                        onSaveChange={(newSavedValue) => handleSaveChange(eventsState[0]._id, newSavedValue)}
+                        onReport={() => setEventWithOpenReport(eventsState[0])}
+                        eventId={eventsState[0]._id}
+                    />
+                </div>
+            </div>
+            {eventWithOpenReport && (
+                <Report
+                    onSubmit={() => {
+                        alert('Report submitted successfully');
+                        setEventWithOpenReport(null);
+                    }}
+                    onClose={handleReportClose}
+                    eventId={eventWithOpenReport._id}
+                />
+            )}
+        </>         
+        );
+    } else if (horizontalOrganizer) {
+        return (
+            <>
+            <div className="bg-white shadow-md rounded-lg py-6 px-4 hover:shadow-lg duration-300 flex items-center">
+                <div className='w-1/3'>
+                    {renderEventImage(eventsState[0].image)}
+                </div>
+                <div className='ml-4 flex-1'>
+                    <Link to={`/Event/${eventsState[0]._id}`}>
+                        <div className='flex justify-between'>
+                            <div>
+                                <h2 className="truncate text-lg font-semibold mb-2">{eventsState[0].title}</h2>
+                                <p className="truncate">{eventsState[0].description}</p>
+                                <p className='text-sm mt-2'>{new Date(eventsState[0].date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} - {eventsState[0].time}</p>
+                                <p className='text-sm'>{eventsState[0].price}</p>
+                            </div>
+                            <div>
+                            <h2 className="truncate text-lg font-semibold mb-2">{eventsState[0].availableTickets}</h2>
+                                <p className="truncate">{eventsState[0].soldTickets}</p>
+                                {/* <p className='text-sm mt-2'>{new Date(eventsState[0].date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} - {eventsState[0].time}</p> */}
+                                <p className='text-sm'>{eventsState[0].orgRevenue}</p>
+                            </div>
+                        </div>
                     </Link>
                     <Feedback
                         rating={eventsState[0].rating}

@@ -8,12 +8,18 @@ import { useNavigate } from 'react-router-dom';
 const Delete = () => {
   const { user, logout } = useContext(AuthContext);
   const [deleteInput, setDeleteInput] = useState('');
+  const [reasonInput, setReasonInput] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const handleDeleteInputChange = (e) => {
     setDeleteInput(e.target.value);
+    setErrorMessage('');
+  };
+
+  const handleReasonInputChange = (e) => {
+    setReasonInput(e.target.value);
     setErrorMessage('');
   };
 
@@ -25,7 +31,6 @@ const Delete = () => {
   const handleDeleteAccount = async (e) => {
     e.preventDefault();
 
-    // Check if 'DELETE' is typed correctly
     if (deleteInput !== 'DELETE') {
       setErrorMessage('Please type "DELETE" correctly.');
       return;
@@ -40,28 +45,36 @@ const Delete = () => {
     }
 
     try {
-      // Send DELETE request to delete user account
-      const response = await axios.delete(`http://localhost:5000/users/${user.email}`, {
-        data: { password } // Pass password in the request body
+      // Verify password
+      const verifyResponse = await axios.post('http://localhost:5000/users/verify-password', {
+        userId: user._id,
+        password: password,
       });
 
-      // Check if user was deleted successfully
-      if (response.status === 200) {
+      if (verifyResponse.status !== 200) {
+        setErrorMessage('Incorrect password. Please enter your correct password.');
+        return;
+      }
+
+      // Send DELETE request to delete user account
+      const deleteRequestResponse = await axios.post('http://localhost:5000/delete-request', {
+        user_id: user._id,
+        target_id: user._id,
+        reason: reasonInput,
+        target_type: 'User',
+      });
+
+      if (deleteRequestResponse.status === 201) {
         // Logout the user
         logout();
         // Redirect to home page after successful deletion
         navigate('/');
       } else {
-        setErrorMessage('Error deleting account. Please try again.');
+        setErrorMessage('Error sending request for account deletion. Please try again.');
       }
     } catch (error) {
-      // Handle specific error for incorrect password
-      if (error.response && error.response.status === 401) {
-        setErrorMessage('Incorrect password. Please enter your correct password.');
-      } else {
-        setErrorMessage('Error deleting account. Please try again.');
-        console.error('Error deleting account:', error);
-      }
+      setErrorMessage('Error sending request for account deletion:', error);
+      console.error('Error sending request for account deletion:', error);
     }
   };
 
@@ -73,6 +86,13 @@ const Delete = () => {
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Verify account deletion</h2>
         <div className="space-y-4">
+          <Input
+            label={'Reason'}
+            type="text"
+            value={reasonInput}
+            onChange={handleReasonInputChange}
+            required
+          />
           <Input
             label={`Type 'DELETE'`}
             type="text"
