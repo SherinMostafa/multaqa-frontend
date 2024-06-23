@@ -130,7 +130,7 @@ const Finance = () => {
 
         // Add or update bank account data
         if (card) {
-            // await axios.patch(`http://localhost:5000/bankAccount/${card._id}`, bankAccountData);
+            await axios.patch(`http://localhost:5000/bankAccount/${card._id}`, bankAccountData);
             console.log('Updated Bank Account Data:', bankAccountData);
         } else {
             const response = await axios.post('http://localhost:5000/bankAccount', bankAccountData);
