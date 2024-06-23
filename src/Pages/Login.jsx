@@ -61,10 +61,10 @@ function Login() {
 
   return (
     <>
-      <div className="p-5 bg-cover bg-" style={{ backgroundImage: 'url(/Images/product-school-DL-yyYDDNX4-unsplash.jpg)', height: '200px', marginBottom: '5px', backgroundPositionY: '30%' }}></div>
+      <div className="p-5 bg-cover bg-" style={{ backgroundImage: 'url(/Images/photo_27_2024-06-22_23-13-16.jpg)', height: '220px', backgroundPositionY: '80%' }}></div>
 
       <div className="container mx-auto px-4">
-        <div className="bg-white bg-opacity-80 backdrop-blur-md shadow-xl rounded-md mx-auto my-5 p-12 -mt-24 max-w-4xl">
+        <div className="bg-white bg-opacity-80 backdrop-blur-md shadow-xl rounded-md mx-auto my-5 mb-14 p-12 -mt-28 max-w-4xl">
           <h2 className="text-4xl uppercase font-bold mb-14 text-[#6F1A07] text-center">Sign In</h2>
 
           <form onSubmit={handleSubmit}>

@@ -82,6 +82,13 @@ const Tickets = ({ eventId, availableTickets }) => {
     return <div>{error}</div>;
   }
 
+  const userType = localStorage.getItem('userType');
+
+  // Conditionally render the Feedback component based on userType
+  if (userType === 'Organizer') {
+      return null; // Hide the component if userType is Organizer
+  }
+
   return (
     <div className="max-w-3xl mx-auto bg-white border border-[#6F1A07] shadow-lg rounded-lg overflow-hidden">
       <div className="p-4">

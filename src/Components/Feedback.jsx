@@ -5,7 +5,7 @@ import Report from '../Sections/Report';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
+const Feedback = ({ isSaved, onSaveChange, onReport, eventId }) => {
     const [user, setUser] = useState(null);
     const [saved, setSaved] = useState(isSaved);
     const [showReportForm, setShowReportForm] = useState(false);
@@ -123,18 +123,15 @@ const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
         };
     }, [dropdownRef]);
 
+    const userType = localStorage.getItem('userType');
+
+    // Conditionally render the Feedback component based on userType
+    if (userType === 'Organizer') {
+        return null; // Hide the component if userType is Organizer
+    }
+
     return (
         <div className="flex items-center justify-between rounded-md mt-6">
-            <div className="flex items-center">
-                {Array.from({ length: 5 }, (_, index) => (
-                    <span
-                        key={index}
-                        className={`text-sm ${index < rating ? 'text-yellow-400' : 'text-gray-400'}`}
-                    >
-                        ★
-                    </span>
-                ))}
-            </div>
             <div className="flex justify-between items-center">
                 {saved ? (
                     <MdFavorite
@@ -149,6 +146,7 @@ const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
                         fontSize='medium'
                     />
                 )}
+            </div>
                 <div className='relative' ref={dropdownRef}>
                     <MdOutlineMoreHoriz
                         className="text-[#6F1A07] cursor-pointer transition duration-300 hover:text-[#A8763E]"
@@ -168,7 +166,6 @@ const Feedback = ({ rating, isSaved, onSaveChange, onReport, eventId }) => {
                         </div>
                     )}
                 </div>
-            </div>
             {showReportForm && (
                 <div className="fixed top-0 left-0 z-50 w-full h-full bg-gray-800 bg-opacity-80 flex justify-center items-center">
                     <div className="bg-white p-8 rounded-md w-full max-w-md mx-auto">

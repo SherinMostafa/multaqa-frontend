@@ -52,7 +52,7 @@ const Navbar = () => {
   };
 
   const getVisibleNavLinks = () => {
-    const filteredNavLinks = navLinks.slice(1, 5);
+    const filteredNavLinks = navLinks.slice(1, 6);
     if (userType === 'Attendee' || userType === 'attendee') {
       return filteredNavLinks.filter((_, index) => index !== 1);
     } else if (userType === 'Organizer' || userType === 'organizer') {
@@ -75,7 +75,7 @@ const Navbar = () => {
               </Link>
             </div>
             {!isCreatePage && (
-              <div className='w-40 sm:w-auto'>
+              <div className='w-40 sm:w-auto hidden md:block'>
                 <Search placeholder={'Search events ...'} />
               </div>
             )}
@@ -152,14 +152,19 @@ const Navbar = () => {
           <div className="pb-6">
             {getVisibleNavLinks().map((navLink) => (
               <NavLink
-                key={navLink.label}
-                to={navLink.href}
-                className='text-[#2B2118] hover:text-[#A8763E] transition duration-500 block px-6 py-2 rounded-md text-base font-medium'
-                onClick={closeNavbar}
+              key={navLink.label}
+              to={navLink.href}
+              className='text-[#2B2118] hover:text-[#A8763E] transition duration-500 block px-6 py-2 rounded-md text-base font-medium'
+              onClick={closeNavbar}
               >
                 {navLink.label}
               </NavLink>
             ))}
+            {!isCreatePage && (
+                <div className='w-full px-4 mt-8 sm:w-auto md:hidden block'>
+                  <Search placeholder={'Search events ...'} />
+                </div>
+              )}
           </div>
         </div>
       </nav>

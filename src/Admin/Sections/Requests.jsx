@@ -48,59 +48,58 @@ const Requests = () => {
 
   return (
     <div className="flex-1 pl-2 pt-4 lg:px-10">
-      <h1 className="text-2xl font-bold text-center">User Requests for Account or Event Deletion</h1>
-      <div className='py-8'>
+    <h1 className="text-2xl font-bold text-center">User Requests</h1>
+    <div className='py-8'>
         {requests.map((request) => (
-          <div className='flex flex-col md:flex-row gap-4 items-center justify-center text-sm md:text-base' key={request._id}>
-            <div className="flex bg-white rounded-lg shadow-md p-8 mb-4 w-3/4">
-              <div className="flex-auto justify-between">
-                <div className="flex-col gap-4 md:flex justify-between mb-4">
-                  <div className="flex gap-4">
-                    <div className="font-semibold">Request ID:</div>
-                    <div>{request._id}</div>
-                  </div>    
-                  <div className="flex gap-4">
-                    <div className="font-semibold">User ID:</div>
-                    <div>{request.user_id}</div>
-                  </div>    
+            <div className='flex gap-4 items-center justify-center'>
+                <div key={request._id} className="flex bg-white rounded-lg shadow-md p-8 mb-4 w-3/4">
+                    <div className="flex-auto justify-between">
+                        <div className="flex justify-between mb-4">
+                            <div className="flex gap-4">
+                                <div className="font-semibold">Request ID:</div>
+                                <div>{request._id}</div>
+                            </div>
+                            <div className="flex gap-4">
+                                <div className="font-semibold">User ID:</div>
+                                <div>{request.user_id}</div>
+                            </div>
+                      </div>
+                      <div className="flex justify-between mb-4">
+                          <div className="flex gap-4">
+                              <div className="font-semibold">Target ID:</div>
+                              <div>{request.target_id}</div>
+                          </div>
+                          <div className="flex gap-4">
+                              <div className="font-semibold">Request Type:</div>
+                              <div>{request.target_type}</div>
+                          </div>
+                      </div>
+                      <div className="flex justify-between mb-4">
+                          <div className="flex gap-4">
+                              <div className="font-semibold">Reason:</div>
+                              <div>{request.reason}</div>
+                          </div>
+                      </div>
+                          <div className="flex justify-between">
+                              <div className="flex gap-4">
+                                  <div className="font-semibold">Created At:</div>
+                                  <div>{new Date(request.createdAt).toLocaleString()}</div>
+                              </div>
+                              <div className="flex gap-4">
+                                  <div className="font-semibold">Status:</div>
+                                  <div>{request.status}</div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                <div className="flex items-end ml-4 gap-x-4">
+                  <Button label="Accept" onClick={() => handleAcceptReport(request._id, 'Approved')} customStyle={'px-8 py-4 font-bold flex justify-center'} />
+                  <Button label="Reject" onClick={() => handleAcceptReport(request._id, 'Rejected')} customStyle={'px-8 py-4 font-bold flex justify-center'} />
                 </div>
-                <div className="flex-col gap-4 md:flex justify-between mb-4">
-                  <div className="flex gap-4">
-                    <div className="font-semibold">Target ID:</div>
-                    <div>{request.target_id}</div>
-                  </div>
-                  <div className="flex gap-4">
-                    <div className="font-semibold">Request Type:</div>
-                    <div>{request.target_type}</div>
-                  </div>
-                </div>
-                <div className="flex justify-between mb-4">
-                  <div className="flex gap-4">
-                    <div className="font-semibold">Reason:</div>
-                    <div>{request.reason}</div>
-                  </div>
-                </div>
-                <div className="flex-col gap-4 md:flex justify-between">
-                  <div className="flex gap-4">
-                    <div className="font-semibold">Created At:</div>
-                    <div>{new Date(request.createdAt).toLocaleString()}</div>
-                  </div>
-                  <div className="flex gap-4">
-                    <div className="font-semibold">Status:</div>
-                    <div>{request.status}</div>
-                  </div>
-                </div>
-              </div>
             </div>
-
-            <div className="flex lg:flex-col xl:flex 2xl:flex-col items-center justify-center gap-4 w-full md:w-auto">
-              <Button label="Accept" onClick={() => handleAcceptReport(request._id, 'Approved')} customStyle={'px-8 py-4 font-bold flex justify-center'} />
-              <Button label="Reject" onClick={() => handleAcceptReport(request._id, 'Rejected')} customStyle={'px-8 py-4 font-bold flex justify-center'} />
-            </div>
-          </div>
         ))}
-      </div>
     </div>
+</div>
   );
 };
 

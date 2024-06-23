@@ -6,7 +6,7 @@ const Footer = () => {
   const userType = localStorage.getItem('userType');
 
   const getVisibleNavLinks = () => {
-    const filteredNavLinks = navLinks.slice(1, 6);
+    const filteredNavLinks = navLinks.slice(1, 7);
     if (userType === 'Attendee' || userType === 'attendee') {
       return filteredNavLinks.filter((_, index) => index !== 1 && index !== 2);
     } else if (userType === 'Organizer' || userType === 'organizer') {
@@ -29,7 +29,7 @@ const Footer = () => {
 
           {/* Navigation Links */}
           <div>
-            <div className='flex items-center justify-between mt-10 flex-wrap'>
+            <div className='flex items-center justify-between mt-10 flex-wrap gap-x-4'>
               {getVisibleNavLinks().map((navLink) => (
                 <NavLink
                   key={navLink.label}

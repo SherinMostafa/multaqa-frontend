@@ -4,7 +4,6 @@ import { FaUser } from 'react-icons/fa';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 import AuthContext from '../Context/AuthContext';
-import { useDropzone } from 'react-dropzone';
 
 function Information() {
   const { user, updateUser } = useContext(AuthContext);
@@ -14,8 +13,7 @@ function Information() {
     phone: '',
     address: '',
     city: '',
-    profileImg: '',
-    imageFile: null,
+    profileImg: '', // Store image path directly
   });
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -27,20 +25,19 @@ function Information() {
         phone: user.phone || '',
         address: user.address || '',
         city: user.city || '',
-        profileImg: user.profileImg || '',
+        profileImg: user.profileImg || '', // Set image path if available
       });
     }
   }, [user]);
 
-  const handleImageChange = (acceptedFiles) => {
-    const file = acceptedFiles[0];
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
         setFormData((prevFormData) => ({
           ...prevFormData,
           profileImg: reader.result,
-          imageFile: file,
         }));
       };
       reader.readAsDataURL(file);
@@ -51,7 +48,6 @@ function Information() {
     setFormData((prevFormData) => ({
       ...prevFormData,
       profileImg: '',
-      imageFile: null,
     }));
   };
 
@@ -72,11 +68,11 @@ function Information() {
         phone: formData.phone,
         address: formData.address,
         city: formData.city,
-        profileImg: formData.profileImg,
+        profileImg: formData.profileImg, // Use the stored image path
       };
-  
+
       const response = await axios.patch(`http://localhost:5000/users/${user.email}`, formDataToSubmit);
-  
+
       if (response.status === 200) {
         alert('Information updated successfully');
         setErrorMessage('');
@@ -91,12 +87,6 @@ function Information() {
       );
     }
   };
-  
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: 'image/*',
-    onDrop: handleImageChange,
-    multiple: false,
-  });
 
   return (
     <form className="flex-1 pl-2 pt-4 lg:p-10" onSubmit={handleSave}>
@@ -104,24 +94,27 @@ function Information() {
       <hr className='my-4 w-full' />
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Profile Image</h2>
-        <div
-          {...getRootProps()}
-          className="dropzone mb-10 w-fit"
-          style={{
-            padding: formData.profileImg ? '' : '20px',
-            textAlign: 'center',
-            cursor: 'pointer',
-            border: formData.profileImg ? 'none' : 'dashed 2px grey',
-          }}
-        >
-          <input {...getInputProps()} />
+        <div className="mb-10 w-fit" style={{ textAlign: 'center' }}>
           {formData.profileImg ? (
-            <img src={formData.profileImg} alt="Uploaded" className="w-36 h-36 rounded-full" />
+            <img src={formData.profileImg} alt="Profile" className="w-36 h-36 rounded-full" />
           ) : (
             <FaUser className="w-36 h-36 mx-auto text-gray-400" />
           )}
         </div>
         <div className="flex space-x-4">
+          <Button 
+            type="button" 
+            label="Upload Image"
+            customStyle="px-4 py-2 text-[18px] bg-[#ECF0F1] border-[#ECF0F1] text-black hover:text-white" 
+            onClick={() => document.getElementById('fileInput').click()}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            id="fileInput"
+            style={{ display: 'none' }}
+            onChange={handleImageChange}
+          />
           {formData.profileImg && (
             <Button 
               type="button" 

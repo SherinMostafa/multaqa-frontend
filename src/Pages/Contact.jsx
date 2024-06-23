@@ -40,10 +40,10 @@ const Contact = () => {
   return (
     <div className="bg-gray-100 min-h-screen py-10">
       <div className="container mx-auto px-4">
-        <div className="bg-white shadow-md rounded-lg overflow-hidden my-5 p-12 mt-10 max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="bg-white shadow-md rounded-lg overflow-hidden my-4 p-12 mt-10 max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold mb-14 text-[#6F1A07] text-center">Contact Us</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8">
             <div className="px-6 py-8">
-              <h2 className="text-4xl font-bold mb-14 text-[#6F1A07] text-center lg:text-left">Contact Us</h2>
               <form onSubmit={handleSubmit}>
                 <Input
                   id="name"
@@ -79,12 +79,12 @@ const Contact = () => {
                 <Button form={true} label={'Send Message'} type={'submit'} customStyle={'py-3 px-6'} />
               </form>
             </div>
-            <div className="px-6 py-8 flex justify-center items-center">
-              {/* <img 
-                src="/Images/product-school-DL-yyYDDNX4-unsplash.jpg" 
+            <div className="px-6 flex justify-center items-center">
+              <img 
+                src="/Images/photo_20_2024-06-22_23-13-16.jpg" 
                 alt="Contact Us" 
-                className="w-full h-[400px] rounded-lg"
-              /> */}
+                className="w-full h-[500px] rounded-lg"
+              />
             </div>
           </div>
         </div>

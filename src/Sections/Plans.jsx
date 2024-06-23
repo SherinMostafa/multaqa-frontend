@@ -85,14 +85,14 @@ function Plans() {
             <div 
               key={plan._id} 
               className={`bg-white rounded-lg shadow-lg p-6 flex flex-col justify-between transform transition-all duration-500} `}
-              style={{ width: '300px', height: '400px' }}
+              style={{ width: '300px', height: '380px' }}
             >
               <div>
                 <h3 className="text-xl font-bold text-[#6F1A07] mb-2 text-center">{plan.name}</h3>
                 <p className="text-lg font-semibold text-gray-800 my-4 text-center">EGP {plan.price}/month</p>
                 <div className="text-gray-600 mb-4">
-                  <p className="text-center">Duration {plan.duration}</p>
-                  <p className="text-center">Number of Tickets {plan.noOfTickets}</p>
+                  <p className="text-center">Duration: {plan.duration} months</p>
+                  {/* <p className="text-center">Number of Tickets {plan.noOfTickets}</p> */}
                 </div>
                 <div className="text-gray-600 mb-6">
                   <div className="mb-2 text-center text-sm">{plan.features}</div>

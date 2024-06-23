@@ -85,46 +85,49 @@ const Event = () => {
   }
 
   return (
-    <div className="mt-10 container mx-auto px-4 mb-20">
-      <div className="bg-white shadow-lg rounded-lg p-6 md:p-10">
-        <img
-          src={`data:image/jpeg;base64,${event.image}`}
-          alt="Event"
-          className="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg"
-        />
-        <div className="flex flex-col lg:flex-row justify-between mt-8 md:mt-12">
-          <div className="w-full lg:w-2/3">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6 text-[#6F1A07]">{event.title}</h2>
-            <p className="text-[#2B2118] leading-relaxed mb-6">{event.description}</p>
-            <p className="text-[#2B2118] text-lg font-semibold mb-2">Date and Time:</p>
-            <p className="text-[#2B2118] mb-6">{new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} - {event.time}</p>
-            {event.location ? (
-              <>
-                <p className="text-[#2B2118] text-lg font-semibold mb-2">Location:</p>
-                <p className="text-[#2B2118] mb-6">{event.location}</p>
-              </>
-            ) : (
-              <>
-                <p className="text-[#2B2118] text-lg font-semibold mb-2">Online Link:</p>
-                <p className="text-[#2B2118] mb-6">{event.onlineUrl}</p>
-              </>
-            )}
+    <div>
+      <div className="mt-10 container mx-auto px-4 mb-20">
+        <div className="bg-white shadow-lg rounded-lg p-6 md:p-10">
+          <img
+            src={`data:image/jpeg;base64,${event.image}`}
+            alt="Event"
+            className="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg"
+          />
+          <div className="flex flex-col lg:flex-row justify-between mt-8 md:mt-12">
+            <div className="w-full lg:w-2/3">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6 text-[#6F1A07]">{event.title}</h2>
+              <p className="text-[#2B2118] leading-relaxed mb-6">{event.description}</p>
+              <p className="text-[#2B2118] text-lg font-semibold mb-2">Date and Time:</p>
+              <p className="text-[#2B2118] mb-6">{new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} - {event.time}</p>
+              {event.location ? (
+                <>
+                  <p className="text-[#2B2118] text-lg font-semibold mb-2">Location:</p>
+                  <p className="text-[#2B2118] mb-6">{event.location}</p>
+                </>
+              ) : (
+                <>
+                  <p className="text-[#2B2118] text-lg font-semibold mb-2">Online Link:</p>
+                  <p className="text-[#2B2118] mb-6">{event.onlineUrl}</p>
+                </>
+              )}
+            </div>
+            <div className="w-full lg:w-1/3 mt-10 lg:mt-0">
+              <Tickets eventId={eventId} availableTickets={event.availableTickets} />
+            </div>
           </div>
-          <div className="w-full lg:w-1/3 mt-10 lg:mt-0">
-            <Tickets eventId={eventId} availableTickets={event.availableTickets} />
-          </div>
-        </div>
 
-        {/* Render Follow Component */}
-        <div className="mt-8">
-          <Follow userId={event.user_id} />
+          {/* Render Follow Component */}
+          <div className="mt-8">
+            <Follow userId={event.user_id} />
+          </div>
         </div>
       </div>
-
-      <div className="container mx-auto py-10 sm:py-20">
-        <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-[#2B2118] font-bold mx-4 mb-6 md:mb-10">Suggested Events</h1>
-        <div>
-          <Cards withSlider={true} events={events} />
+      <div className='bg-[#ECF0F1]'>
+        <div className="container pt-10 sm:pt-20 mx-auto">
+          <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-[#2B2118] font-bold mx-4 mb-6 md:mb-10">Suggested Events</h1>
+          <div>
+            <Cards withSlider={true} events={events} />
+          </div>
         </div>
       </div>
     </div>

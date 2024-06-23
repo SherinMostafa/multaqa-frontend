@@ -56,42 +56,35 @@ function Login() {
 
   return (
     <>
-      <div className="p-5 bg-cover bg-" style={{ backgroundImage: 'url(/Images/product-school-DL-yyYDDNX4-unsplash.jpg)', height: '200px', marginBottom: '5px', backgroundPositionY: '30%' }}></div>
+      <div className="p-5 bg-cover flex justify-center items-center" style={{ backgroundImage: 'url(/Images/photo_26_2024-06-22_23-13-16.jpg)', height: '100vh' }}>
+        <div className="container mx-auto px-4">
+          <div className="bg-white bg-opacity-100 backdrop-blur-md shadow-xl rounded-md mx-auto p-12 max-w-4xl">
+            <h2 className="text-2xl md:text-4xl uppercase font-bold mb-14 text-[#6F1A07] text-center">Welcome to Admin Dashboard</h2>
 
-      <div className="container mx-auto px-4">
-        <div className="bg-white bg-opacity-80 backdrop-blur-md shadow-xl rounded-md mx-auto my-5 p-12 -mt-24 max-w-4xl">
-          <h2 className="text-4xl uppercase font-bold mb-14 text-[#6F1A07] text-center">Sign In</h2>
-
-          <form onSubmit={handleSubmit}>
-            <div className="flex flex-col items-center gap-4">
-              <Input
-                id="email"
-                label="Email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                withFloatingEffect={true}
-              />
-              <Input
-                id="password"
-                label="Password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                withFloatingEffect={true}
-              />
-              {emailError && <span className="text-red-500 text-sm">{emailError}</span>}
-              {passwordError && <span className="text-red-500 text-sm">{passwordError}</span>}
-              {serverMessage && <span className="text-red-500 text-sm">{serverMessage}</span>}
-            </div>
-            <Button form={true} label={'Sign In'} type={'submit'} customStyle={'w-full sm:w-3/4 md:w-1/2 p-4 mt-8 flex justify-center mx-auto'} />
-          </form>
-
-          <div className="flex justify-center items-center mt-6">
-            <p className='pr-2'>
-              Don't have an account ?
-            </p>
-            <Button link={true} label={'Sign Up'} linkURL={'/Register'} />
+            <form onSubmit={handleSubmit}>
+              <div className="flex flex-col items-center gap-4">
+                <Input
+                  id="email"
+                  label="Email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  withFloatingEffect={true}
+                />
+                <Input
+                  id="password"
+                  label="Password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  withFloatingEffect={true}
+                />
+                {emailError && <span className="text-red-500 text-sm">{emailError}</span>}
+                {passwordError && <span className="text-red-500 text-sm">{passwordError}</span>}
+                {serverMessage && <span className="text-red-500 text-sm">{serverMessage}</span>}
+              </div>
+              <Button form={true} label={'Sign In'} type={'submit'} customStyle={'w-full sm:w-3/4 md:w-1/2 p-4 mt-8 flex justify-center mx-auto'} />
+            </form>
           </div>
         </div>
       </div>

@@ -179,7 +179,6 @@ const Cards = ({ events, withSlider, horizontal, horizontalOrganizer }) => {
                             <div>
                             <h2 className="truncate text-lg font-semibold mb-2">{eventsState[0].availableTickets}</h2>
                                 <p className="truncate">{eventsState[0].soldTickets}</p>
-                                {/* <p className='text-sm mt-2'>{new Date(eventsState[0].date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} - {eventsState[0].time}</p> */}
                                 <p className='text-sm'>{eventsState[0].orgRevenue}</p>
                             </div>
                         </div>
