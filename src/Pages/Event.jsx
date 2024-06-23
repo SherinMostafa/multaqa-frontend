@@ -89,7 +89,7 @@ const Event = () => {
       <div className="mt-10 container mx-auto px-4 mb-20">
         <div className="bg-white shadow-lg rounded-lg p-6 md:p-10">
           <img
-            src={`data:image/jpeg;base64,${event.image}`}
+            src={`${event.image}`}
             alt="Event"
             className="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg"
           />

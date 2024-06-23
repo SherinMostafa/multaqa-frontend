@@ -49,7 +49,7 @@ const Cards = ({ events, withSlider, horizontal, horizontalOrganizer }) => {
 
     const renderEventImage = (imageData) => {
         if (typeof imageData === 'string' && imageData.startsWith('/9j/')) {
-            return <img src={`data:image/jpeg;base64,${imageData}`} alt="Event" className='mt-6 rounded-lg' />;
+            return <img src={`${imageData}`} alt="Event" className='mt-6 rounded-lg' />;
         } else {
             return <div className='mt-6 rounded-lg bg-gray-200 text-center py-14'>Image not available</div>;
         }
